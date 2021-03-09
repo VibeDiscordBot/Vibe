@@ -1,5 +1,6 @@
 import Event from '../classes/Event';
 import * as djs from 'discord.js-light';
+import { CommandResponse } from '../handlers/CommandHandler';
 
 export default class Message extends Event {
 	public name = 'Message (command)';
@@ -12,8 +13,13 @@ export default class Message extends Event {
 			const args = content.split(' ');
 			const label = args.shift();
 
-			if (!this.bot.commandHandler.run(message, args, label)) {
-				message.channel.send(`Unknown command "${label}"`);
+			switch(this.bot.commandHandler.run(message, args, label)) {
+				case CommandResponse.Unknown:
+					message.channel.send(`Unknown command "${label}"`);
+					break
+				case CommandResponse.InsufficientPermissions:
+					message.channel.send('I have insufficient permissions')
+					break
 			}
 		}
 	}

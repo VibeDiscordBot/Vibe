@@ -5,6 +5,13 @@ import Command from '../classes/Command';
 import { Message } from 'discord.js';
 import Logger from '../classes/Logger';
 
+export enum CommandResponse {
+	Unknown,
+	InsufficientPermissions,
+	Error,
+	Success
+}
+
 export default class CommandHandler extends Handler {
 	public name: string = 'Commandhandler';
 
@@ -25,18 +32,26 @@ export default class CommandHandler extends Handler {
 		});
 	}
 
-	public run(message: Message, args: string[], label: string): boolean {
+	public run(message: Message, args: string[], label: string): CommandResponse {
 		const cmd = this.commands.filter(
 			(cmd) => cmd.name === label || cmd.alias.includes(label)
 		);
 
-		if (cmd.length < 1) return false;
+		if (cmd.length < 1) return CommandResponse.Unknown;
 		if (cmd.length > 1) {
 			Logger.error(`More than 1 command eligable for label ${label}`);
-			return false;
+			return CommandResponse.Unknown;
+		}
+
+		for(let i = 0; i < cmd[0].permissions.length; i++) {
+			const perm = cmd[0].permissions[i]
+
+			if(!message.guild.me.hasPermission(perm)) {
+				return CommandResponse.InsufficientPermissions
+			}
 		}
 
 		cmd[0].exec(message, args, label);
-		return true;
+		return CommandResponse.Success;
 	}
 }
