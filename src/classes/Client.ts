@@ -2,6 +2,7 @@ import * as djs from 'discord.js-light';
 import * as path from 'path';
 import CommandHandler from '../handlers/CommandHandler';
 import EventHandler from '../handlers/EventHandler';
+import GuildManager from './managers/GuildManager';
 
 export default class Client extends djs.Client {
 	public cfg: {
@@ -14,6 +15,7 @@ export default class Client extends djs.Client {
 	};
 
 	public commandHandler: CommandHandler;
+	public guildManager: GuildManager
 
 	constructor() {
 		super();
@@ -36,5 +38,6 @@ export default class Client extends djs.Client {
 		await commandHandler.build();
 
 		this.commandHandler = commandHandler;
+		this.guildManager = new GuildManager(this)
 	}
 }

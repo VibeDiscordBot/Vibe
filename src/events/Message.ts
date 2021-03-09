@@ -8,6 +8,8 @@ export default class Message extends Event {
 	public once = false;
 
 	public async run(message: djs.Message) {
+		await this.bot.guildManager.register(message.guild)
+
 		if (message.content.startsWith(this.bot.cfg.prefix)) {
 			const content = message.content.slice(this.bot.cfg.prefix.length).trim();
 			const args = content.split(' ');
