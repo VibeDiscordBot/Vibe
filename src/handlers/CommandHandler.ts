@@ -9,7 +9,7 @@ export enum CommandResponse {
 	Unknown,
 	InsufficientPermissions,
 	Error,
-	Success
+	Success,
 }
 
 export default class CommandHandler extends Handler {
@@ -43,11 +43,11 @@ export default class CommandHandler extends Handler {
 			return CommandResponse.Unknown;
 		}
 
-		for(let i = 0; i < cmd[0].permissions.length; i++) {
-			const perm = cmd[0].permissions[i]
+		for (let i = 0; i < cmd[0].permissions.length; i++) {
+			const perm = cmd[0].permissions[i];
 
-			if(!message.guild.me.hasPermission(perm)) {
-				return CommandResponse.InsufficientPermissions
+			if (!message.guild.me.hasPermission(perm)) {
+				return CommandResponse.InsufficientPermissions;
 			}
 		}
 

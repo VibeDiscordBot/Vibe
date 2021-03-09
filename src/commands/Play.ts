@@ -7,14 +7,14 @@ export default class Example extends Command {
 	public permissions = [];
 
 	public async exec(message: Message, args: string[], label: string) {
-        const url = args[0]
+		const url = args[0];
 
-        const queue = this.bot.guildManager.getQueue(message.guild)
-        queue.add({
-            author: 'Unknown',
-            duration: -1,
-            name: 'Unknown',
-            url: url
-        })
+		const queue = this.bot.guildManager.getQueue(message.guild);
+		queue.add({
+			author: 'Unknown',
+			duration: -1,
+			name: 'Unknown',
+			url: url,
+		});
 	}
 }

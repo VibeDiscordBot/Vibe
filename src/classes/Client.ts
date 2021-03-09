@@ -15,7 +15,7 @@ export default class Client extends djs.Client {
 	};
 
 	public commandHandler: CommandHandler;
-	public guildManager: GuildManager
+	public guildManager: GuildManager;
 
 	constructor() {
 		super();
@@ -38,6 +38,6 @@ export default class Client extends djs.Client {
 		await commandHandler.build();
 
 		this.commandHandler = commandHandler;
-		this.guildManager = new GuildManager(this)
+		this.guildManager = new GuildManager(this);
 	}
 }

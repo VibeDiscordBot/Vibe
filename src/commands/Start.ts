@@ -7,9 +7,9 @@ export default class Example extends Command {
 	public permissions = [];
 
 	public async exec(message: Message, args: string[], label: string) {
-        const player = this.bot.guildManager.getPlayer(message.guild)
+		const player = this.bot.guildManager.getPlayer(message.guild);
 
-        await player.connect(message.member.voice.channel)
-        player.play()
+		await player.connect(message.member.voice.channel);
+		player.play();
 	}
 }
