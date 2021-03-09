@@ -1,4 +1,5 @@
 import {
+	Guild,
 	StreamDispatcher,
 	VoiceChannel,
 	VoiceConnection,
@@ -7,6 +8,7 @@ import Client from './Client';
 import Queue from './Queue';
 import ytdl from 'ytdl-core-discord';
 import Logger from './Logger';
+import * as playerSchema from '../schemas/player'
 
 export enum PlayerStatus {
 	Playing,
@@ -23,13 +25,15 @@ export default class Player {
 	private connection: VoiceConnection;
 	private dispatcher: StreamDispatcher;
 
-	constructor(protected bot: Client, protected queue: Queue) {}
+	constructor(protected bot: Client, protected queue: Queue, public guild: Guild) {}
 
 	public async connect(channel: VoiceChannel) {
 		this.connection = await channel.join();
 		this.channel = channel;
 
 		this.status = PlayerStatus.Connected;
+
+		this.sync()
 	}
 
 	private async continue() {
@@ -51,6 +55,8 @@ export default class Player {
 					this.dispatcher.on('error', console.log);
 
 					this.status = PlayerStatus.Playing;
+
+					this.sync()
 				} else {
 					this.destroy();
 				}
@@ -67,19 +73,54 @@ export default class Player {
 		delete this.dispatcher;
 
 		this.status = PlayerStatus.Disconnected;
+
+		this.sync()
 	}
 
 	public destroy() {
 		Logger.info(`Destroying player ${this?.channel.guild.name}`);
-		this.disconnect();
+		this.connection.disconnect()
+		delete this.connection
+		delete this.dispatcher
 		delete this.channel;
 
 		this.status = PlayerStatus.Destroyed;
+
+		this.sync()
 	}
 
 	public play() {
 		if (this.status !== PlayerStatus.Playing) {
 			this.continue();
+		}
+	}
+
+	public toObject(): Object {
+		return {
+			status: PlayerStatus[this.status.toString()].toLowerCase(),
+			channel: this?.channel?.id||null,
+			guild: this.guild.id,
+			queue: this.queue.toObject()
+		}
+	}
+
+	public async sync() {
+		const playerModel = this.bot.db.model('Player', playerSchema.default)
+
+		let ref = await playerModel.findOne({
+			guild: this.guild.id
+		})
+
+		if(!ref) {
+			let doc = this.toObject()
+			ref = new playerModel(doc)
+			await ref.save()
+		}else {
+			const obj = this.toObject()
+			for(let key in obj) {
+				ref[key] = obj[key]
+			}
+			await ref.save()
 		}
 	}
 }

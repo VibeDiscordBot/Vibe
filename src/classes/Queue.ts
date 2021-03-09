@@ -20,4 +20,21 @@ export default class Queue {
 	public add(track: Track) {
 		this.queue.push(track);
 	}
+
+	public toObject(): Array<Object> {
+		return (() => {
+			const result = []
+
+			this.queue.forEach(entry => {
+				result.push({
+					name: entry.name,
+					author: entry.author,
+					duration: entry.duration,
+					url: entry.url
+				})
+			})
+
+			return result
+		})()
+	}
 }

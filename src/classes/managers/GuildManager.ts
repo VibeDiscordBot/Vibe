@@ -13,9 +13,10 @@ export default class GuildManager {
 		if (!this.queues.has(guild.id)) this.queues.set(guild.id, new Queue());
 	}
 
-	public getPlayer(guild: Guild) {
+	public async getPlayer(guild: Guild) {
 		if (this.players.has(guild.id)) return this.players.get(guild.id);
-		const player = new Player(this.bot, this.queues.get(guild.id));
+		const player = new Player(this.bot, this.queues.get(guild.id), guild);
+		await player.sync()
 		this.players.set(guild.id, player);
 		return player;
 	}
@@ -26,5 +27,10 @@ export default class GuildManager {
 
 	public getQueue(guild: Guild) {
 		return this.queues.get(guild.id);
+	}
+
+	public async sync(guild: Guild) {
+		const player = await this.getPlayer(guild)
+		await player.sync()
 	}
 }
