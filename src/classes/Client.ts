@@ -3,7 +3,7 @@ import * as path from 'path';
 import CommandHandler from '../handlers/CommandHandler';
 import EventHandler from '../handlers/EventHandler';
 import GuildManager from './managers/GuildManager';
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 export default class Client extends djs.Client {
 	public cfg: {
@@ -17,7 +17,7 @@ export default class Client extends djs.Client {
 
 	public commandHandler: CommandHandler;
 	public guildManager: GuildManager;
-	public db: typeof mongoose
+	public db: typeof mongoose;
 
 	constructor() {
 		super();
@@ -43,13 +43,20 @@ export default class Client extends djs.Client {
 			this.commandHandler = commandHandler;
 			this.guildManager = new GuildManager(this);
 
-			mongoose.connect(`mongodb://${process.env.MONGODB_HOST}/${process.env.MONGODB_DATABASE||'vibe'}`, {
-				useNewUrlParser: true,
-				useUnifiedTopology: true
-			}).then(db => {
-				this.db = db
-				res()
-			})
-		})
+			mongoose
+				.connect(
+					`mongodb://${process.env.MONGODB_HOST}/${
+						process.env.MONGODB_DATABASE || 'vibe'
+					}`,
+					{
+						useNewUrlParser: true,
+						useUnifiedTopology: true,
+					}
+				)
+				.then((db) => {
+					this.db = db;
+					res();
+				});
+		});
 	}
 }

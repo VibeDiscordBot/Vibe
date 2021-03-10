@@ -1,6 +1,6 @@
-import { Guild } from "discord.js-light";
-import Client from "./Client";
-import * as playerSchema from '../schemas/player'
+import { Guild } from 'discord.js-light';
+import Client from './Client';
+import * as playerSchema from '../schemas/player';
 
 type Track = {
 	url: string;
@@ -29,37 +29,37 @@ export default class Queue {
 
 	public toObject(): Array<Object> {
 		return (() => {
-			const result = []
+			const result = [];
 
-			this.queue.forEach(entry => {
+			this.queue.forEach((entry) => {
 				result.push({
 					name: entry.name,
 					author: entry.author,
 					duration: entry.duration,
-					url: entry.url
-				})
-			})
+					url: entry.url,
+				});
+			});
 
-			return result
-		})()
+			return result;
+		})();
 	}
 
 	public async getFromDb() {
-		const playerModel = this.bot.db.model('Player', playerSchema.default)
+		const playerModel = this.bot.db.model('Player', playerSchema.default);
 
 		const ref = await playerModel.findOne({
-			guild: this.guild.id
-		})
+			guild: this.guild.id,
+		});
 
-		if(ref) {
-			(<any>ref).queue.forEach(entry => {
+		if (ref) {
+			(<any>ref).queue.forEach((entry) => {
 				this.add({
 					name: entry.name,
 					author: entry.author,
 					duration: entry.duration,
-					url: entry.url
-				})
-			})
+					url: entry.url,
+				});
+			});
 		}
 	}
 }

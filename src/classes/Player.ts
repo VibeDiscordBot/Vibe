@@ -8,7 +8,7 @@ import Client from './Client';
 import Queue from './Queue';
 import ytdl from 'ytdl-core-discord';
 import Logger from './Logger';
-import * as playerSchema from '../schemas/player'
+import * as playerSchema from '../schemas/player';
 
 export enum PlayerStatus {
 	Playing,
@@ -25,7 +25,11 @@ export default class Player {
 	private connection: VoiceConnection;
 	private dispatcher: StreamDispatcher;
 
-	constructor(protected bot: Client, protected queue: Queue, public guild: Guild) {}
+	constructor(
+		protected bot: Client,
+		protected queue: Queue,
+		public guild: Guild
+	) {}
 
 	public async connect(channel: VoiceChannel) {
 		this.connection = await channel.join();
@@ -33,7 +37,7 @@ export default class Player {
 
 		this.status = PlayerStatus.Connected;
 
-		this.sync()
+		this.sync();
 	}
 
 	private async continue() {
@@ -56,7 +60,7 @@ export default class Player {
 
 					this.status = PlayerStatus.Playing;
 
-					this.sync()
+					this.sync();
 				} else {
 					this.destroy();
 				}
@@ -74,19 +78,19 @@ export default class Player {
 
 		this.status = PlayerStatus.Disconnected;
 
-		this.sync()
+		this.sync();
 	}
 
 	public destroy() {
 		Logger.info(`Destroying player ${this?.channel.guild.name}`);
-		this.connection.disconnect()
-		delete this.connection
-		delete this.dispatcher
+		this.connection.disconnect();
+		delete this.connection;
+		delete this.dispatcher;
 		delete this.channel;
 
 		this.status = PlayerStatus.Destroyed;
 
-		this.sync()
+		this.sync();
 	}
 
 	public play() {
@@ -98,29 +102,29 @@ export default class Player {
 	public toObject(): Object {
 		return {
 			status: PlayerStatus[this.status.toString()].toLowerCase(),
-			channel: this?.channel?.id||null,
+			channel: this?.channel?.id || null,
 			guild: this.guild.id,
-			queue: this.queue.toObject()
-		}
+			queue: this.queue.toObject(),
+		};
 	}
 
 	public async sync() {
-		const playerModel = this.bot.db.model('Player', playerSchema.default)
+		const playerModel = this.bot.db.model('Player', playerSchema.default);
 
 		let ref = await playerModel.findOne({
-			guild: this.guild.id
-		})
+			guild: this.guild.id,
+		});
 
-		if(!ref) {
-			let doc = this.toObject()
-			ref = new playerModel(doc)
-			await ref.save()
-		}else {
-			const obj = this.toObject()
-			for(let key in obj) {
-				ref[key] = obj[key]
+		if (!ref) {
+			let doc = this.toObject();
+			ref = new playerModel(doc);
+			await ref.save();
+		} else {
+			const obj = this.toObject();
+			for (let key in obj) {
+				ref[key] = obj[key];
 			}
-			await ref.save()
+			await ref.save();
 		}
 	}
 }

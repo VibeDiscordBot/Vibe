@@ -16,6 +16,6 @@ export default class Example extends Command {
 			name: 'Unknown',
 			url: url,
 		});
-		await this.bot.guildManager.sync(message.guild)
+		await this.bot.guildManager.sync(message.guild);
 	}
 }
