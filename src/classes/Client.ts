@@ -13,7 +13,7 @@ export default class Client extends djs.Client {
 			events: string;
 		};
 		prefix: string;
-		embedColor: string
+		embedColor: string;
 	};
 
 	public commandHandler: CommandHandler;
@@ -30,7 +30,7 @@ export default class Client extends djs.Client {
 				events: path.join(__dirname, '..', 'events'),
 			},
 			prefix: '!',
-			embedColor: 'orange'
+			embedColor: 'orange',
 		};
 	}
 

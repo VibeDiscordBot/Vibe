@@ -32,7 +32,11 @@ export default class CommandHandler extends Handler {
 		});
 	}
 
-	public async run(message: Message, args: string[], label: string): Promise<CommandResponse> {
+	public async run(
+		message: Message,
+		args: string[],
+		label: string
+	): Promise<CommandResponse> {
 		const cmd = this.commands.filter(
 			(cmd) => cmd.name === label || cmd.alias.includes(label)
 		);
