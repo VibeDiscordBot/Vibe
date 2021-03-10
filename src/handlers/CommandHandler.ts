@@ -32,7 +32,7 @@ export default class CommandHandler extends Handler {
 		});
 	}
 
-	public run(message: Message, args: string[], label: string): CommandResponse {
+	public async run(message: Message, args: string[], label: string): Promise<CommandResponse> {
 		const cmd = this.commands.filter(
 			(cmd) => cmd.name === label || cmd.alias.includes(label)
 		);
@@ -43,13 +43,7 @@ export default class CommandHandler extends Handler {
 			return CommandResponse.Unknown;
 		}
 
-		for (let i = 0; i < cmd[0].permissions.length; i++) {
-			const perm = cmd[0].permissions[i];
-
-			if (!message.guild.me.hasPermission(perm)) {
-				return CommandResponse.InsufficientPermissions;
-			}
-		}
+		//if (!message.guild.me.hasPermission(cmd[0].permissions)) return CommandResponse.InsufficientPermissions;
 
 		cmd[0].exec(message, args, label);
 		return CommandResponse.Success;

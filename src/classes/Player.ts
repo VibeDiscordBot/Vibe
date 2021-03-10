@@ -33,7 +33,7 @@ export default class Player {
 
 	public async connect(channel: VoiceChannel) {
 		this.connection = await channel.join();
-		this.channel = channel;
+		this.channel = <VoiceChannel>(await channel.fetch());
 
 		this.status = PlayerStatus.Connected;
 

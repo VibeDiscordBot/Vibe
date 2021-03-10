@@ -15,7 +15,7 @@ export default class Message extends Event {
 			const args = content.split(' ');
 			const label = args.shift();
 
-			switch (this.bot.commandHandler.run(message, args, label)) {
+			switch (await this.bot.commandHandler.run(message, args, label)) {
 				case CommandResponse.Unknown:
 					message.channel.send(`Unknown command "${label}"`);
 					break;
