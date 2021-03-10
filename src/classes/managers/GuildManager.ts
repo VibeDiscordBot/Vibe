@@ -10,7 +10,11 @@ export default class GuildManager {
 	constructor(protected bot: Client) {}
 
 	public async register(guild: Guild) {
-		if (!this.queues.has(guild.id)) this.queues.set(guild.id, new Queue());
+		if (!this.queues.has(guild.id)) {
+			const queue = new Queue(this.bot, guild)
+			await queue.getFromDb()
+			this.queues.set(guild.id, queue)
+		}
 	}
 
 	public async getPlayer(guild: Guild) {
