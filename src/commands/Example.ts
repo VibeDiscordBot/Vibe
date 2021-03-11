@@ -6,5 +6,6 @@ export default class Example extends Command {
 	public alias = [];
 	public permissions = [];
 
+	/* eslint-disable */
 	public async exec(message: Message, args: string[], label: string) {}
 }
