@@ -11,6 +11,7 @@ import ytdl from 'ytdl-core-discord';
 import Logger from './Logger';
 import * as playerSchema from '../schemas/player';
 import { getBaseEmbed } from '../helpers/embed';
+import { secondsToTimestamp } from '../helpers/timestamp';
 
 export enum PlayerStatus {
 	Playing,
@@ -79,7 +80,7 @@ export default class Player {
 									.setTitle('Now playing')
 									.addField('Title', next.name)
 									.addField('Author', next.author)
-									.addField('Duration', next.duration)
+									.addField('Duration', secondsToTimestamp(next.duration))
 									.addField('Url', next.url)
 							);
 						}

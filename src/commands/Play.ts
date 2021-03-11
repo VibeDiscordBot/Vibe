@@ -1,8 +1,9 @@
 import Command from '../classes/Command';
 import { Message, MessageEmbed } from 'discord.js-light';
-import ytsr from 'ytsr';
+import ytsr, { Video } from 'ytsr';
 import { PlayerStatus, simplifyPlayerStatus } from '../classes/Player';
 import { getNotification } from '../helpers/embed';
+import { timestampToSeconds } from '../helpers/timestamp';
 
 export default class extends Command {
 	public name = 'play';
@@ -17,7 +18,7 @@ export default class extends Command {
 			const msg = await message.channel.send(
 				getNotification(`Searching for ${query}`, message.author)
 			);
-			const song = <any>(
+			const song = <Video>(
 				(await ytsr(query)).items.find((r) => r.type === 'video')
 			);
 
@@ -29,7 +30,7 @@ export default class extends Command {
 			const queue = this.bot.guildManager.getQueue(message.guild);
 			queue.add({
 				author: song.author.name,
-				duration: -1,
+				duration: timestampToSeconds(song.duration),
 				name: song.title,
 				url: song.url,
 			});
