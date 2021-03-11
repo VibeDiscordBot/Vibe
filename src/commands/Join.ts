@@ -1,5 +1,10 @@
 import Command from '../classes/Command';
-import { Message, MessageEmbed, PermissionString } from 'discord.js-light';
+import {
+	Message,
+	MessageEmbed,
+	PermissionString,
+	TextChannel,
+} from 'discord.js-light';
 import { getNotification } from '../helpers/embed';
 
 export default class Join extends Command {
@@ -12,6 +17,7 @@ export default class Join extends Command {
 			const player = await this.bot.guildManager.getPlayer(message.guild);
 
 			await player.connect(message.member.voice.channel);
+			player.setAnnounce(<TextChannel>message.channel);
 			message.channel.send(
 				getNotification(`Joined ${player.channel.name}`, message.author)
 			);

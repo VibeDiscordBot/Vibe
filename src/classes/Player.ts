@@ -1,6 +1,7 @@
 import {
 	Guild,
 	StreamDispatcher,
+	TextChannel,
 	VoiceChannel,
 	VoiceConnection,
 } from 'discord.js-light';
@@ -9,6 +10,7 @@ import Queue from './Queue';
 import ytdl from 'ytdl-core-discord';
 import Logger from './Logger';
 import * as playerSchema from '../schemas/player';
+import { getBaseEmbed } from '../helpers/embed';
 
 export enum PlayerStatus {
 	Playing,
@@ -21,6 +23,7 @@ export enum PlayerStatus {
 export default class Player {
 	public status: PlayerStatus = PlayerStatus.Disconnected;
 	public channel: VoiceChannel;
+	public announce: TextChannel;
 
 	private connection: VoiceConnection;
 	private dispatcher: StreamDispatcher;
@@ -55,6 +58,18 @@ export default class Player {
 					this.dispatcher.once('finish', () => {
 						this.status = PlayerStatus.Connected;
 						this.continue();
+					});
+					this.dispatcher.on('start', () => {
+						if (this.announce) {
+							this.announce.send(
+								getBaseEmbed(this.bot.user)
+									.setTitle('Now playing')
+									.addField('Title', next.name)
+									.addField('Author', next.author)
+									.addField('Duration', next.duration)
+									.addField('Url', next.url)
+							);
+						}
 					});
 					this.dispatcher.on('error', console.log);
 
@@ -126,5 +141,9 @@ export default class Player {
 			}
 			await ref.save();
 		}
+	}
+
+	public setAnnounce(announce: TextChannel) {
+		this.announce = announce;
 	}
 }
