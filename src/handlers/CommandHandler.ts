@@ -15,7 +15,7 @@ export enum CommandResponse {
 export default class CommandHandler extends Handler {
 	public name = 'Commandhandler';
 
-	private commands: Command[] = [];
+	public commands: Command[] = [];
 
 	public async init() {
 		const commandsPath = this.bot.cfg.path.commands;
