@@ -2,6 +2,7 @@ import Command from '../classes/Command';
 import { Message, MessageEmbed } from 'discord.js-light';
 import ytsr from 'ytsr';
 import { PlayerStatus } from '../classes/Player';
+import { getNotification } from '../helpers/embed';
 
 export default class Play extends Command {
 	public name = 'play';
@@ -16,7 +17,7 @@ export default class Play extends Command {
 		) {
 			const query = args.join(' ');
 			const msg = await message.channel.send(
-				new MessageEmbed().setTitle(`Searching for ${query}`)
+				getNotification(`Searching for ${query}`, message.author)
 			);
 			const song = <any>(
 				(await ytsr(query)).items.find((r) => r.type === 'video')
@@ -24,7 +25,7 @@ export default class Play extends Command {
 
 			if (!song)
 				return message.channel.send(
-					new MessageEmbed().setTitle("Your query didn't return anything")
+					getNotification("Your query didn't return anything", message.author)
 				);
 
 			const queue = this.bot.guildManager.getQueue(message.guild);
@@ -36,12 +37,14 @@ export default class Play extends Command {
 			});
 			await this.bot.guildManager.sync(message.guild);
 
-			msg.edit(new MessageEmbed().setTitle(`Added ${song.title} to the queue`));
+			msg.edit(
+				getNotification(`Added ${song.title} to the queue`, message.author)
+			);
 
 			player.play();
 		} else {
 			message.channel.send(
-				new MessageEmbed().setTitle("I'm not connected to a voice channel")
+				getNotification("I'm not connected to a voice channel", message.author)
 			);
 		}
 	}

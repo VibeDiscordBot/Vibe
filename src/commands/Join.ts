@@ -1,5 +1,6 @@
 import Command from '../classes/Command';
 import { Message, MessageEmbed, PermissionString } from 'discord.js-light';
+import { getNotification } from '../helpers/embed';
 
 export default class Join extends Command {
 	public name = 'join';
@@ -12,12 +13,13 @@ export default class Join extends Command {
 
 			await player.connect(message.member.voice.channel);
 			message.channel.send(
-				new MessageEmbed().setTitle(`Joined ${player.channel.name}`)
+				getNotification(`Joined ${player.channel.name}`, message.author)
 			);
 		} else {
 			message.channel.send(
-				new MessageEmbed().setTitle(
-					'You need to be in a voice channel to do that'
+				getNotification(
+					'You need to be in a voice channel to do that',
+					message.author
 				)
 			);
 		}
