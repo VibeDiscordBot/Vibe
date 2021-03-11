@@ -2,7 +2,7 @@ import Event from '../classes/Event';
 import * as djs from 'discord.js-light';
 import { CommandResponse } from '../handlers/CommandHandler';
 
-export default class Message extends Event {
+export default class extends Event {
 	public name = 'Message (command)';
 	public type = 'message';
 	public once = false;
