@@ -2,7 +2,7 @@ import { Guild } from 'discord.js-light';
 import Client from './Client';
 import * as playerSchema from '../schemas/player';
 
-type Track = {
+export type Track = {
 	url: string;
 	name: string;
 	author: string;

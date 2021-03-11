@@ -6,7 +6,7 @@ import {
 	VoiceConnection,
 } from 'discord.js-light';
 import Client from './Client';
-import Queue from './Queue';
+import Queue, { Track } from './Queue';
 import ytdl from 'ytdl-core-discord';
 import Logger from './Logger';
 import * as playerSchema from '../schemas/player';
@@ -37,13 +37,14 @@ export default class Player {
 	public status: PlayerStatus = PlayerStatus.Disconnected;
 	public channel: VoiceChannel;
 	public announce: TextChannel;
+	public current: Track;
 
 	private connection: VoiceConnection;
 	private dispatcher: StreamDispatcher;
 
 	constructor(
 		protected bot: Client,
-		protected queue: Queue,
+		public queue: Queue,
 		public guild: Guild
 	) {}
 
@@ -61,12 +62,14 @@ export default class Player {
 			if (this.connection && this.connection.status === 0) {
 				const next = this.queue.next();
 				if (next) {
+					this.current = next;
 					this.dispatcher = this.connection.play(await ytdl(next.url), {
 						type: 'opus',
 						bitrate: this.channel.bitrate,
 					});
 					this.dispatcher.once('finish', () => {
 						this.status = PlayerStatus.Connected;
+						this.current = null;
 						this.continue();
 					});
 					this.dispatcher.on('start', () => {
