@@ -1,7 +1,7 @@
 import Command from '../classes/Command';
 import { Message, MessageEmbed } from 'discord.js-light';
 import ytsr from 'ytsr';
-import { PlayerStatus } from '../classes/Player';
+import { PlayerStatus, simplifyPlayerStatus } from '../classes/Player';
 import { getNotification } from '../helpers/embed';
 
 export default class extends Command {
@@ -12,9 +12,7 @@ export default class extends Command {
 	public async exec(message: Message, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(message.guild);
 
-		if (
-			player.status !== (PlayerStatus.Disconnected || PlayerStatus.Destroyed)
-		) {
+		if (simplifyPlayerStatus(player.status) !== PlayerStatus.Disconnected) {
 			const query = args.join(' ');
 			const msg = await message.channel.send(
 				getNotification(`Searching for ${query}`, message.author)

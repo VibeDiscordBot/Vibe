@@ -19,6 +19,18 @@ export enum PlayerStatus {
 	Disconnected,
 	Destroyed,
 }
+export function simplifyPlayerStatus(
+	status: PlayerStatus
+): PlayerStatus.Connected | PlayerStatus.Disconnected {
+	if (
+		status ===
+		(PlayerStatus.Connected || PlayerStatus.Playing || PlayerStatus.Paused)
+	) {
+		return PlayerStatus.Connected;
+	} else {
+		return PlayerStatus.Disconnected;
+	}
+}
 
 export default class Player {
 	public status: PlayerStatus = PlayerStatus.Disconnected;
@@ -44,10 +56,7 @@ export default class Player {
 	}
 
 	private async continue() {
-		if (
-			this.status === PlayerStatus.Connected ||
-			this.status === PlayerStatus.Playing
-		) {
+		if (simplifyPlayerStatus(this.status) === PlayerStatus.Connected) {
 			if (this.connection && this.connection.status === 0) {
 				const next = this.queue.next();
 				if (next) {

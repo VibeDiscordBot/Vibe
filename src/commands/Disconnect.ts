@@ -1,6 +1,6 @@
 import Command from '../classes/Command';
 import { Message } from 'discord.js-light';
-import { PlayerStatus } from '../classes/Player';
+import { PlayerStatus, simplifyPlayerStatus } from '../classes/Player';
 import { getNotification } from '../helpers/embed';
 
 export default class extends Command {
@@ -10,10 +10,7 @@ export default class extends Command {
 
 	public async exec(message: Message, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(message.guild);
-		if (
-			player.status ===
-			(PlayerStatus.Connected || PlayerStatus.Playing || PlayerStatus.Paused)
-		) {
+		if (simplifyPlayerStatus(player.status) === PlayerStatus.Connected) {
 			player.disconnect();
 			message.channel.send(getNotification('Disconnected', message.author));
 		} else {
