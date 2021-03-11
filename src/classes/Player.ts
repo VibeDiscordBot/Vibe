@@ -23,8 +23,9 @@ export function simplifyPlayerStatus(
 	status: PlayerStatus
 ): PlayerStatus.Connected | PlayerStatus.Disconnected {
 	if (
-		status ===
-		(PlayerStatus.Connected || PlayerStatus.Playing || PlayerStatus.Paused)
+		status === PlayerStatus.Connected ||
+		status === PlayerStatus.Playing ||
+		status === PlayerStatus.Paused
 	) {
 		return PlayerStatus.Connected;
 	} else {
