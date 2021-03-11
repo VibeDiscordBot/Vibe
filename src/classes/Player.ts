@@ -51,6 +51,7 @@ export default class Player {
 
 	public async connect(channel: VoiceChannel) {
 		this.connection = await channel.join();
+		await this.connection.voice.setSelfDeaf(true);
 		this.channel = <VoiceChannel>await channel.fetch();
 
 		this.status = PlayerStatus.Connected;
