@@ -116,12 +116,12 @@ export default class Player {
 		});
 
 		if (!ref) {
-			let doc = this.toObject();
+			const doc = this.toObject();
 			ref = new playerModel(doc);
 			await ref.save();
 		} else {
 			const obj = this.toObject();
-			for (let key in obj) {
+			for (const key in obj) {
 				ref[key] = obj[key];
 			}
 			await ref.save();

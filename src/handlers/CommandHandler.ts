@@ -13,7 +13,7 @@ export enum CommandResponse {
 }
 
 export default class CommandHandler extends Handler {
-	public name: string = 'Commandhandler';
+	public name = 'Commandhandler';
 
 	private commands: Command[] = [];
 

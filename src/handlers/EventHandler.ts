@@ -5,7 +5,7 @@ import Event from '../classes/Event';
 import Logger from '../classes/Logger';
 
 export default class EventHandler extends Handler {
-	public name: string = 'Eventhandler';
+	public name = 'Eventhandler';
 
 	public async init() {
 		const eventsPath = this.bot.cfg.path.events;
