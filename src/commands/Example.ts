@@ -1,7 +1,7 @@
 import Command from '../classes/Command';
 import { Message } from 'discord.js-light';
 
-export default class Example extends Command {
+export default class extends Command {
 	public name = 'example';
 	public alias = [];
 	public permissions = [];

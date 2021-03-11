@@ -4,7 +4,7 @@ import ytsr from 'ytsr';
 import { PlayerStatus } from '../classes/Player';
 import { getNotification } from '../helpers/embed';
 
-export default class Play extends Command {
+export default class extends Command {
 	public name = 'play';
 	public alias = ['p'];
 	public permissions = [];

@@ -7,7 +7,7 @@ import {
 } from 'discord.js-light';
 import { getNotification } from '../helpers/embed';
 
-export default class Join extends Command {
+export default class extends Command {
 	public name = 'join';
 	public alias = ['j'];
 	public permissions: PermissionString[] = ['CONNECT', 'SPEAK'];

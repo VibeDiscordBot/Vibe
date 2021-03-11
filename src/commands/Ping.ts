@@ -2,7 +2,7 @@ import Command from '../classes/Command';
 import { Message } from 'discord.js-light';
 import { getNotification } from '../helpers/embed';
 
-export default class Ping extends Command {
+export default class extends Command {
 	public name = 'ping';
 	public alias = ['pong'];
 	public permissions = [];
