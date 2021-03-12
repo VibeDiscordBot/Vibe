@@ -1,6 +1,7 @@
 import Command from '../classes/Command';
 import { Message } from 'discord.js-light';
 import { getBaseEmbed, getNotification } from '../helpers/embed';
+import { secondsToTimestamp } from '../helpers/timestamp';
 
 export default class extends Command {
 	public name = 'queue';
@@ -20,13 +21,21 @@ export default class extends Command {
 				`Queue for ${message.guild.name}`
 			);
 
+			let text = '';
+
 			if (player.current) {
-				embed.addField(`[🎵] ${player.current.name}`, '** **');
+				text += `[🎵] [${player.current.name}](${
+					player.current.url
+				}) [${secondsToTimestamp(player.current.duration)}]`;
 			}
 			for (let i = 0; i < queue.length; i++) {
 				const track = queue[i];
-				embed.addField(`[${i + 1}] ${track.name}`, '** **');
+				text += `${text !== '' ? '\n' : ''}[${i + 1}] [${track.name}](${
+					track.url
+				}) [${secondsToTimestamp(track.duration)}]`;
 			}
+
+			embed.setDescription(text);
 
 			message.channel.send(embed);
 		}
