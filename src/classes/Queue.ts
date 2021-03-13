@@ -62,4 +62,8 @@ export default class Queue {
 			});
 		}
 	}
+
+	public clear() {
+		this.queue = [];
+	}
 }
