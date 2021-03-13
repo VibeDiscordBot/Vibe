@@ -14,7 +14,6 @@ export default class extends Command {
 		const player = await this.bot.guildManager.getPlayer(message.guild);
 		if (simplifyPlayerStatus(player.status) === PlayerStatus.Connected) {
 			player.disconnect();
-			message.channel.send(getNotification('Disconnected', message.author));
 		} else {
 			message.channel.send(
 				getNotification("I'm not connected", message.author)

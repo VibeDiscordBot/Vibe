@@ -10,7 +10,7 @@ import Queue, { Track } from './Queue';
 import ytdl from 'ytdl-core-discord';
 import Logger from './Logger';
 import * as playerSchema from '../schemas/player';
-import { getBaseEmbed } from '../helpers/embed';
+import { getBaseEmbed, getNotification } from '../helpers/embed';
 import { secondsToTimestamp } from '../helpers/timestamp';
 
 export enum PlayerStatus {
@@ -102,9 +102,13 @@ export default class Player {
 		Logger.info(
 			`Disconnecting from ${this?.channel.guild.name}:${this?.channel.name}`
 		);
+		this.announce.send(
+			getNotification('Disconnecting the player', this.bot.user)
+		);
 		this.connection.disconnect();
 		delete this.connection;
 		delete this.dispatcher;
+		this.current = null;
 
 		this.status = PlayerStatus.Disconnected;
 
@@ -113,10 +117,14 @@ export default class Player {
 
 	public destroy() {
 		Logger.info(`Destroying player ${this?.channel.guild.name}`);
+		this.announce.send(
+			getNotification('Disconnecting and destroying the player', this.bot.user)
+		);
 		this.connection.disconnect();
 		delete this.connection;
 		delete this.dispatcher;
 		delete this.channel;
+		this.current = null;
 
 		this.status = PlayerStatus.Destroyed;
 
@@ -160,5 +168,18 @@ export default class Player {
 
 	public setAnnounce(announce: TextChannel) {
 		this.announce = announce;
+	}
+
+	public skip(amount: number) {
+		for (let i = 0; i < amount - 1; i++) {
+			if (!this.queue.next()) this.destroy();
+		}
+		if (simplifyPlayerStatus(this.status) === PlayerStatus.Connected) {
+			this.continue();
+		} else {
+			if (!this.queue.next()) this.destroy();
+		}
+
+		this.sync();
 	}
 }
