@@ -12,22 +12,24 @@ export default class extends Command {
 		const embed = getBaseEmbed(message.author).setTitle('Commands');
 
 		const cmds = this.bot.commandHandler.commands;
-		const perLine = 5;
-		let newLineIn = perLine;
+		const names = [];
+		cmds.forEach((cmd) => {
+			if (cmd.name === 'example') return;
+			names.push(cmd.name);
+		});
 		let text = '';
-		for (let i = 0; i < cmds.length; i++) {
-			const cmd = cmds[i];
+		let currentRow = 0;
+		const perRow = 5;
+		names.forEach((name) => {
+			text += `\`${name}\` `;
+			currentRow++;
 
-			if (cmd.name === 'example') continue;
-
-			text += `\`${cmd.name}\` `;
-
-			if (newLineIn === 1) {
-				newLineIn = perLine;
-				embed.addField(text.trim(), '** **');
-				text = '';
-			} else newLineIn--;
-		}
+			if (currentRow === perRow) {
+				text += '\n';
+				currentRow = 0;
+			}
+		});
+		embed.setDescription(text);
 
 		message.channel.send(embed);
 	}
