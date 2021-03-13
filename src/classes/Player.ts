@@ -52,6 +52,10 @@ export default class Player {
 	public async connect(channel: VoiceChannel) {
 		this.connection = await channel.join();
 		await this.connection.voice.setSelfDeaf(true);
+		this.connection.once('disconnect', () => {
+			this.destroy();
+		});
+
 		this.channel = <VoiceChannel>await channel.fetch();
 
 		this.status = PlayerStatus.Connected;
@@ -120,7 +124,7 @@ export default class Player {
 		this.announce.send(
 			getNotification('Disconnecting and destroying the player', this.bot.user)
 		);
-		this.connection.disconnect();
+		if (this.connection.status !== 4) this.connection.disconnect();
 		delete this.connection;
 		delete this.dispatcher;
 		delete this.channel;
