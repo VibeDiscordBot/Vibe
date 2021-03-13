@@ -1,5 +1,5 @@
 import Command from '../classes/Command';
-import { Message, MessageEmbed } from 'discord.js-light';
+import { Message } from 'discord.js-light';
 import ytsr, { Video } from 'ytsr';
 import { PlayerStatus, simplifyPlayerStatus } from '../classes/Player';
 import { getNotification } from '../helpers/embed';
