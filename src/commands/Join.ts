@@ -1,16 +1,12 @@
 import Command from '../classes/Command';
-import {
-	Message,
-	MessageEmbed,
-	PermissionString,
-	TextChannel,
-} from 'discord.js-light';
+import { Message, TextChannel } from 'discord.js-light';
 import { getNotification } from '../helpers/embed';
+import PermissionType from '../ts/PermissionType';
 
 export default class extends Command {
 	public name = 'join';
 	public alias = ['j'];
-	public permissions: PermissionString[] = ['CONNECT', 'SPEAK'];
+	public permissions: PermissionType[] = ['CONNECT', 'SPEAK'];
 
 	public async exec(message: Message, args: string[], label: string) {
 		if (message.member.voice?.channel) {

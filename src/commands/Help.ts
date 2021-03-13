@@ -1,11 +1,12 @@
 import Command from '../classes/Command';
 import { Message } from 'discord.js-light';
 import { getBaseEmbed } from '../helpers/embed';
+import PermissionType from '../ts/PermissionType';
 
 export default class extends Command {
 	public name = 'help';
 	public alias = ['?'];
-	public permissions = [];
+	public permissions: PermissionType[] = [];
 
 	public async exec(message: Message, args: string[], label: string) {
 		const embed = getBaseEmbed(message.author).setTitle('Commands');

@@ -4,11 +4,13 @@ import ytsr, { Video } from 'ytsr';
 import { PlayerStatus, simplifyPlayerStatus } from '../classes/Player';
 import { getNotification } from '../helpers/embed';
 import { timestampToSeconds } from '../helpers/timestamp';
+import PermissionType from '../ts/PermissionType';
+import { DJPermission } from '../helpers/requestPermission';
 
 export default class extends Command {
 	public name = 'play';
 	public alias = ['p'];
-	public permissions = [];
+	public permissions: PermissionType[] = [DJPermission.any];
 
 	public async exec(message: Message, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(message.guild);

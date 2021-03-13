@@ -2,11 +2,12 @@ import Command from '../classes/Command';
 import { Message } from 'discord.js-light';
 import { getBaseEmbed, getNotification } from '../helpers/embed';
 import { secondsToTimestamp } from '../helpers/timestamp';
+import PermissionType from '../ts/PermissionType';
 
 export default class extends Command {
 	public name = 'queue';
 	public alias = ['q'];
-	public permissions = [];
+	public permissions: PermissionType[] = [];
 
 	public async exec(message: Message, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(message.guild);

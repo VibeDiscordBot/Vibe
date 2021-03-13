@@ -22,6 +22,11 @@ export default class extends Event {
 				case CommandResponse.InsufficientPermissions:
 					message.channel.send('I have insufficient permissions');
 					break;
+				case CommandResponse.UserInsufficientPermissions:
+					message.channel.send(
+						'You have insufficient permissions (are you connected to a voice channel?)'
+					);
+					break;
 			}
 		}
 	}

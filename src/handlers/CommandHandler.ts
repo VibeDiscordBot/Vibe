@@ -2,14 +2,16 @@ import Handler from '../classes/Handler';
 import * as path from 'path';
 import * as fs from 'fs';
 import Command from '../classes/Command';
-import { Message } from 'discord.js';
+import { Message, PermissionString, TextChannel } from 'discord.js';
 import Logger from '../classes/Logger';
+import { DJPermission, requestPermission } from '../helpers/requestPermission';
 
 export enum CommandResponse {
 	Unknown,
 	InsufficientPermissions,
 	Error,
 	Success,
+	UserInsufficientPermissions,
 }
 
 export default class CommandHandler extends Handler {
@@ -48,6 +50,25 @@ export default class CommandHandler extends Handler {
 		}
 
 		//if (!message.guild.me.hasPermission(cmd[0].permissions)) return CommandResponse.InsufficientPermissions;
+		const discordPerms: PermissionString[] = [];
+		const costumPerms: DJPermission[] = [];
+		cmd[0].permissions.forEach((perm) => {
+			if (typeof perm === 'number') {
+				costumPerms.push(perm);
+			} else discordPerms.push(perm);
+		});
+
+		if (
+			!(
+				await requestPermission(
+					this.bot,
+					<TextChannel>message.channel,
+					message.member,
+					costumPerms
+				)
+			).perm
+		)
+			return CommandResponse.UserInsufficientPermissions;
 
 		cmd[0].exec(message, args, label);
 		return CommandResponse.Success;
