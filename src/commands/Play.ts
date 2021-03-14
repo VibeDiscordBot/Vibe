@@ -29,10 +29,17 @@ export default class extends Command {
 					getNotification("Your query didn't return anything", message.author)
 				);
 
+			const duration = timestampToSeconds(song.duration);
+			if (duration > 10 * 60) {
+				return message.channel.send(
+					getNotification('That song is longer than 10 minutes', message.author)
+				);
+			}
+
 			const queue = this.bot.guildManager.getQueue(message.guild);
 			queue.add({
 				author: song.author.name,
-				duration: timestampToSeconds(song.duration),
+				duration: duration,
 				name: song.title,
 				url: song.url,
 			});
