@@ -28,7 +28,7 @@ export default class Client extends djs.Client {
 				commands: path.join(__dirname, '..', 'commands'),
 				events: path.join(__dirname, '..', 'events'),
 			},
-			prefix: '!',
+			prefix: process.env.BOT_PREFIX,
 		};
 	}
 
