@@ -108,7 +108,7 @@ export function requestPermission(
 					time: 20 * 1000,
 				}
 			);
-			const requiredYes = Math.ceil(
+			const requiredYes = Math.round(
 				((player.channel.members.size - 1) / 3) * 2
 			);
 			let yes = 0;
