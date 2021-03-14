@@ -96,7 +96,7 @@ export default class Player {
 
 					this.sync();
 				} else {
-					this.destroy();
+					this.destroy(true);
 				}
 			}
 		}
@@ -109,30 +109,38 @@ export default class Player {
 		this.announce.send(
 			getNotification('Disconnecting the player', this.bot.user)
 		);
+		this.status = PlayerStatus.Disconnected;
 		this.connection.disconnect();
 		delete this.connection;
 		delete this.dispatcher;
 		this.current = null;
 
-		this.status = PlayerStatus.Disconnected;
-
 		this.sync();
 	}
 
-	public destroy() {
-		Logger.info(`Destroying player ${this?.channel.guild.name}`);
-		this.announce.send(
-			getNotification('Disconnecting and destroying the player', this.bot.user)
-		);
-		if (this.connection.status !== 4) this.connection.disconnect();
-		delete this.connection;
-		delete this.dispatcher;
-		delete this.channel;
-		this.current = null;
+	public destroy(force = false) {
+		if (
+			force ||
+			(this.status !== PlayerStatus.Disconnected &&
+				this.status !== PlayerStatus.Destroyed)
+		) {
+			Logger.info(`Destroying player ${this?.channel.guild.name}`);
+			this.announce.send(
+				getNotification(
+					'Disconnecting and destroying the player',
+					this.bot.user
+				)
+			);
+			if (this.connection.status !== 4) this.connection.disconnect();
+			delete this.connection;
+			delete this.dispatcher;
+			delete this.channel;
+			this.current = null;
 
-		this.status = PlayerStatus.Destroyed;
+			this.status = PlayerStatus.Destroyed;
 
-		this.sync();
+			this.sync();
+		}
 	}
 
 	public play() {
