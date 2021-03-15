@@ -17,7 +17,10 @@ export enum CommandResponse {
 export default class CommandHandler extends Handler {
 	public name = 'Commandhandler';
 
-	public commands: Command[] = [];
+	public commands: {
+		cmd: Command;
+		path: string;
+	}[] = [];
 
 	public async init() {
 		const commandsPath = this.bot.cfg.path.commands;
@@ -26,10 +29,14 @@ export default class CommandHandler extends Handler {
 			withFileTypes: true,
 		}).forEach(async (command) => {
 			if (command.isFile() && command.name.endsWith('.ts')) {
-				const C = (await import(path.join(commandsPath, command.name))).default;
+				const p = path.join(commandsPath, command.name);
+				const C = (await import(p)).default;
 				const instance: Command = new C(this.bot);
 
-				this.commands.push(instance);
+				this.commands.push({
+					cmd: instance,
+					path: path.resolve(p),
+				});
 			}
 		});
 	}
@@ -40,7 +47,7 @@ export default class CommandHandler extends Handler {
 		label: string
 	): Promise<CommandResponse> {
 		const cmd = this.commands.filter(
-			(cmd) => cmd.name === label || cmd.alias.includes(label)
+			(cmd) => cmd.cmd.name === label || cmd.cmd.alias.includes(label)
 		);
 
 		if (cmd.length < 1) return CommandResponse.Unknown;
@@ -52,7 +59,7 @@ export default class CommandHandler extends Handler {
 		//if (!message.guild.me.hasPermission(cmd[0].permissions)) return CommandResponse.InsufficientPermissions;
 		const discordPerms: PermissionString[] = [];
 		const costumPerms: DJPermission[] = [];
-		cmd[0].permissions.forEach((perm) => {
+		cmd[0].cmd.permissions.forEach((perm) => {
 			if (typeof perm === 'number') {
 				costumPerms.push(perm);
 			} else discordPerms.push(perm);
@@ -70,7 +77,7 @@ export default class CommandHandler extends Handler {
 		)
 			return CommandResponse.UserInsufficientPermissions;
 
-		cmd[0].exec(message, args, label);
+		cmd[0].cmd.exec(message, args, label);
 		return CommandResponse.Success;
 	}
 }

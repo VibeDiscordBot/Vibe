@@ -14,8 +14,8 @@ export default class extends Command {
 		const cmds = this.bot.commandHandler.commands;
 		const names = [];
 		cmds.forEach((cmd) => {
-			if (cmd.name === 'example') return;
-			names.push(cmd.name);
+			if (cmd.cmd.name === 'example') return;
+			names.push(cmd.cmd.name);
 		});
 		let text = '';
 		let currentRow = 0;

@@ -4,6 +4,7 @@ import CommandHandler from '../handlers/CommandHandler';
 import EventHandler from '../handlers/EventHandler';
 import GuildManager from './managers/GuildManager';
 import mongoose from 'mongoose';
+import Logger from './Logger';
 
 export default class Client extends djs.Client {
 	public cfg: {
@@ -13,6 +14,7 @@ export default class Client extends djs.Client {
 			events: string;
 		};
 		prefix: string;
+		ownerId: string;
 	};
 
 	public commandHandler: CommandHandler;
@@ -29,6 +31,7 @@ export default class Client extends djs.Client {
 				events: path.join(__dirname, '..', 'events'),
 			},
 			prefix: process.env.BOT_PREFIX,
+			ownerId: '464287642356285442',
 		};
 	}
 
@@ -58,5 +61,26 @@ export default class Client extends djs.Client {
 					res();
 				});
 		});
+	}
+
+	public async unload() {
+		Logger.info('Unloading');
+
+		this.removeAllListeners();
+
+		this.commandHandler.commands.forEach((data) => {
+			delete require.cache[require.resolve(data.path)];
+		});
+		delete this.commandHandler;
+
+		delete this.guildManager;
+
+		await this.db.connection.close();
+		delete this.db;
+	}
+
+	public async reload() {
+		await this.unload();
+		await this.build();
 	}
 }
