@@ -135,11 +135,13 @@ export default class Player {
 	}
 
 	public toObject(): Object {
+		const queueObj = this.queue.toObject();
 		return {
 			status: PlayerStatus[this.status.toString()].toLowerCase(),
 			channel: this?.channel?.id || null,
 			guild: this.guild.id,
-			queue: this.queue.toObject(),
+			queue: queueObj.queue,
+			loop: queueObj.loop,
 		};
 	}
 

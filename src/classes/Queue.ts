@@ -43,7 +43,10 @@ export default class Queue {
 		this.queue.push(track);
 	}
 
-	public toObject(): Array<Object> {
+	public toObject(): {
+		queue: Array<Object>;
+		loop: number;
+	} {
 		return (() => {
 			const result = [];
 
@@ -56,7 +59,10 @@ export default class Queue {
 				});
 			});
 
-			return result;
+			return {
+				queue: result,
+				loop: this.loop,
+			};
 		})();
 	}
 
@@ -76,6 +82,7 @@ export default class Queue {
 					url: entry.url,
 				});
 			});
+			this.loop = (<any>ref).loop;
 		}
 	}
 

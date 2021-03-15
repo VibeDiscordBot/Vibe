@@ -15,6 +15,7 @@ const player = new Schema({
 			url: String,
 		},
 	],
+	loop: Number,
 });
 
 export default player;
