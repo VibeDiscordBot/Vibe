@@ -63,10 +63,10 @@ export default class Player {
 		this.sync();
 	}
 
-	private async continue() {
+	private async continue(force = false) {
 		if (simplifyPlayerStatus(this.status) === PlayerStatus.Connected) {
 			if (this.connection && this.connection.status === 0) {
-				const next = this.queue.next();
+				const next = this.queue.next(force);
 				if (next) {
 					this.current = next;
 					this.dispatcher = this.connection.play(await ytdl(next.url), {
@@ -184,12 +184,12 @@ export default class Player {
 
 	public skip(amount: number) {
 		for (let i = 0; i < amount - 1; i++) {
-			if (!this.queue.next()) this.destroy();
+			if (!this.queue.next(true)) this.destroy();
 		}
 		if (simplifyPlayerStatus(this.status) === PlayerStatus.Connected) {
-			this.continue();
+			this.continue(true);
 		} else {
-			if (!this.queue.next()) this.destroy();
+			if (!this.queue.next(true)) this.destroy();
 		}
 
 		this.sync();
