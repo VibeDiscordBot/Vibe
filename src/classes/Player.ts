@@ -10,8 +10,7 @@ import Queue, { Track } from './Queue';
 import ytdl from 'ytdl-core-discord';
 import Logger from './Logger';
 import * as playerSchema from '../schemas/player';
-import { getBaseEmbed, getNotification } from '../helpers/embed';
-import { secondsToTimestamp } from '../helpers/timestamp';
+import { getNotification, getSongEmbed } from '../helpers/embed';
 
 export enum PlayerStatus {
 	Playing,
@@ -82,12 +81,7 @@ export default class Player {
 					this.dispatcher.on('start', () => {
 						if (this.announce) {
 							this.announce.send(
-								getBaseEmbed(this.bot.user)
-									.setTitle('Now playing')
-									.addField('Title', next.name)
-									.addField('Author', next.author)
-									.addField('Duration', secondsToTimestamp(next.duration))
-									.addField('Url', next.url)
+								getSongEmbed(next, this.bot.user, 'Now playing')
 							);
 						}
 					});
