@@ -52,8 +52,9 @@ export default class Player {
 	public async connect(channel: VoiceChannel) {
 		this.connection = await channel.join();
 		await this.connection.voice.setSelfDeaf(true);
-		this.connection.once('disconnect', () => {
-			this.destroy();
+		this.connection.on('disconnect', () => {
+			if (simplifyPlayerStatus(this.status) === PlayerStatus.Connected)
+				this.destroy();
 		});
 
 		this.channel = <VoiceChannel>await channel.fetch();
@@ -96,7 +97,7 @@ export default class Player {
 
 					this.sync();
 				} else {
-					this.destroy(true);
+					this.destroy();
 				}
 			}
 		}
@@ -118,29 +119,19 @@ export default class Player {
 		this.sync();
 	}
 
-	public destroy(force = false) {
-		if (
-			force ||
-			(this.status !== PlayerStatus.Disconnected &&
-				this.status !== PlayerStatus.Destroyed)
-		) {
-			Logger.info(`Destroying player ${this?.channel.guild.name}`);
-			this.announce.send(
-				getNotification(
-					'Disconnecting and destroying the player',
-					this.bot.user
-				)
-			);
-			if (this.connection.status !== 4) this.connection.disconnect();
-			delete this.connection;
-			delete this.dispatcher;
-			delete this.channel;
-			this.current = null;
+	public destroy() {
+		Logger.info(`Destroying player ${this?.channel.guild.name}`);
+		this.announce.send(
+			getNotification('Disconnecting and destroying the player', this.bot.user)
+		);
+		this.status = PlayerStatus.Destroyed;
+		if (this.connection.status !== 4) this.connection.disconnect();
+		delete this.connection;
+		delete this.dispatcher;
+		delete this.channel;
+		this.current = null;
 
-			this.status = PlayerStatus.Destroyed;
-
-			this.sync();
-		}
+		this.sync();
 	}
 
 	public play() {
@@ -193,5 +184,9 @@ export default class Player {
 		}
 
 		this.sync();
+	}
+
+	public voiceChannelUpdate() {
+		if (this.channel.members.size - 1 < 1) this.destroy();
 	}
 }
