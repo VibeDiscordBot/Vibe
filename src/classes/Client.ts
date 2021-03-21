@@ -42,7 +42,6 @@ export default class Client extends djs.Client {
 			const eventHandler = new EventHandler(this);
 			const commandHandler = new CommandHandler(this);
 
-			await eventHandler.build();
 			await commandHandler.build();
 
 			this.commandHandler = commandHandler;
@@ -63,6 +62,8 @@ export default class Client extends djs.Client {
 					this.db = db;
 					res();
 				});
+
+			await eventHandler.build();
 		});
 	}
 

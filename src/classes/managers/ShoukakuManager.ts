@@ -7,7 +7,7 @@ export default class ShoukakuManager extends Shoukaku {
 			bot,
 			[
 				{
-					name: 'Main',
+					name: 'main',
 					auth: 'weeb=gura=yse',
 					host: 'localhost',
 					port: 6969,
