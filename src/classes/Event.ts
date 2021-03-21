@@ -2,12 +2,7 @@ import Client from './Client';
 
 export default abstract class Event {
 	abstract name: string;
-	abstract type:
-		| string
-		| {
-				name: string;
-				instance: 'shoukaku' | 'discord' | 'mongoose';
-		  };
+	abstract type: any;
 	abstract once: boolean = false;
 
 	constructor(protected bot: Client) {}

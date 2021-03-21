@@ -50,7 +50,7 @@ export default class EventHandler extends Handler {
 							break;
 						case 'shoukaku':
 							this.bot.shoukaku[instance.once ? 'once' : 'on'](
-								<'disconnected'>instance.type.name,
+								<any>instance.type.name,
 								(...args: any[]) => {
 									instance.exec(...args);
 								}
