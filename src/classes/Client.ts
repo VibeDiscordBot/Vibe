@@ -5,6 +5,7 @@ import EventHandler from '../handlers/EventHandler';
 import GuildManager from './managers/GuildManager';
 import mongoose from 'mongoose';
 import Logger from './Logger';
+import ShoukakuManager from './managers/ShoukakuManager';
 
 export default class Client extends djs.Client {
 	public cfg: {
@@ -20,6 +21,7 @@ export default class Client extends djs.Client {
 	public commandHandler: CommandHandler;
 	public guildManager: GuildManager;
 	public db: typeof mongoose;
+	public shoukaku: ShoukakuManager;
 
 	constructor() {
 		super();
@@ -45,6 +47,7 @@ export default class Client extends djs.Client {
 
 			this.commandHandler = commandHandler;
 			this.guildManager = new GuildManager(this);
+			this.shoukaku = new ShoukakuManager(this);
 
 			mongoose
 				.connect(
