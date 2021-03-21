@@ -1,0 +1,4 @@
+services:
+	lavalink:
+		image: fredboat/lavalink
+		volumes: ${PWD}/lavalink/application.yml
