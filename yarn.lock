@@ -1513,10 +1513,9 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-shoukaku@^1.6.3:
+"shoukaku@https://github.com/112batman/Shoukaku.git#add-num-shards-header":
   version "1.6.3"
-  resolved "https://registry.yarnpkg.com/shoukaku/-/shoukaku-1.6.3.tgz#ab74ff205d853709d5bf1028c7d301c765878f3a"
-  integrity sha512-OT4ZFL7IGqGps/afZaSA1/fIE7USBn5eU+BnvC/BUAS3hPC2MTJ+c6pcTP6tRdrUg/R6iJdkOI2wDBLUOB2Wmw==
+  resolved "https://github.com/112batman/Shoukaku.git#1db13783f3f9fb1cae24e803262b94d511f02d8d"
   dependencies:
     abort-controller "^3.0.0"
     node-fetch "^2.6.1"

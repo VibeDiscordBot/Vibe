@@ -1,5 +1,5 @@
 import { MessageEmbed, User } from 'discord.js-light';
-import { Track } from '../classes/Queue';
+import { ShoukakuTrack } from 'shoukaku';
 import { secondsToTimestamp } from './timestamp';
 
 const embedColor = '#f29e02';
@@ -17,13 +17,13 @@ export function getNotification(text: string, author: User) {
 	return getBaseEmbed(author).setTitle(text);
 }
 
-export function getSongEmbed(track: Track, user: User, title?: string) {
+export function getSongEmbed(track: ShoukakuTrack, user: User, title?: string) {
 	const embed = getBaseEmbed(user);
 	if (title) embed.setTitle(title);
 	embed
-		.addField('Title', track.name)
-		.addField('Author', track.author)
-		.addField('Duration', secondsToTimestamp(track.duration))
-		.addField('Url', track.url);
+		.addField('Title', track.info.title)
+		.addField('Author', track.info.author)
+		.addField('Duration', secondsToTimestamp(track.info.length))
+		.addField('Url', track.info.uri);
 	return embed;
 }

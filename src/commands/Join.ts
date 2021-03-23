@@ -1,5 +1,5 @@
 import Command from '../classes/Command';
-import { Message, TextChannel } from 'discord.js-light';
+import { Message, TextChannel, VoiceChannel } from 'discord.js-light';
 import { getNotification } from '../helpers/embed';
 import PermissionType from '../ts/PermissionType';
 
@@ -15,7 +15,14 @@ export default class extends Command {
 			await player.connect(message.member.voice.channel);
 			player.setAnnounce(<TextChannel>message.channel);
 			message.channel.send(
-				getNotification(`Joined ${player.channel.name}`, message.author)
+				getNotification(
+					`Joined ${
+						(<VoiceChannel>(
+							await this.bot.channels.fetch(message.member.voice.channel.id)
+						)).name
+					}`,
+					message.author
+				)
 			);
 		} else {
 			message.channel.send(

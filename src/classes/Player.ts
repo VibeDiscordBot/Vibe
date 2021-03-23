@@ -1,167 +1,78 @@
-import {
-	Guild,
-	StreamDispatcher,
-	TextChannel,
-	VoiceChannel,
-	VoiceConnection,
-} from 'discord.js-light';
+import { Guild, TextChannel, VoiceChannel } from 'discord.js-light';
 import Client from './Client';
-import Queue, { Track } from './Queue';
-import ytdl from 'ytdl-core-discord';
+import Queue from './Queue';
 import Logger from './Logger';
-import * as playerSchema from '../schemas/player';
 import { getNotification, getSongEmbed } from '../helpers/embed';
-
-export enum PlayerStatus {
-	Playing,
-	Paused,
-	Connected,
-	Disconnected,
-	Destroyed,
-}
-export function simplifyPlayerStatus(
-	status: PlayerStatus
-): PlayerStatus.Connected | PlayerStatus.Disconnected {
-	if (
-		status === PlayerStatus.Connected ||
-		status === PlayerStatus.Playing ||
-		status === PlayerStatus.Paused
-	) {
-		return PlayerStatus.Connected;
-	} else {
-		return PlayerStatus.Disconnected;
-	}
-}
+import { ShoukakuPlayer, ShoukakuSocket } from 'shoukaku';
 
 export default class Player {
-	public status: PlayerStatus = PlayerStatus.Disconnected;
-	public channel: VoiceChannel;
-	public announce: TextChannel;
-	public current: Track;
+	public node: ShoukakuSocket;
+	public player?: ShoukakuPlayer;
 
-	private connection: VoiceConnection;
-	private dispatcher: StreamDispatcher;
+	private announce: TextChannel;
 
-	constructor(
-		protected bot: Client,
-		public queue: Queue,
-		public guild: Guild
-	) {}
-
-	public async connect(channel: VoiceChannel) {
-		this.connection = await channel.join();
-		await this.connection.voice.setSelfDeaf(true);
-		this.connection.on('disconnect', () => {
-			if (simplifyPlayerStatus(this.status) === PlayerStatus.Connected)
-				this.destroy();
-		});
-
-		this.channel = <VoiceChannel>await channel.fetch();
-
-		this.status = PlayerStatus.Connected;
-
-		this.sync();
+	constructor(protected bot: Client, public guild: Guild, public queue: Queue) {
+		this.node = this.bot.shoukaku.getNode();
 	}
 
-	private async continue(force = false) {
-		if (simplifyPlayerStatus(this.status) === PlayerStatus.Connected) {
-			if (this.connection && this.connection.status === 0) {
-				const next = this.queue.next(force);
-				if (next) {
-					this.current = next;
-					this.dispatcher = this.connection.play(await ytdl(next.url), {
-						type: 'opus',
-						bitrate: this.channel.bitrate,
-					});
-					this.dispatcher.once('finish', () => {
-						this.status = PlayerStatus.Connected;
-						this.current = null;
-						this.continue();
-					});
-					this.dispatcher.on('start', () => {
-						if (this.announce) {
-							this.announce.send(
-								getSongEmbed(next, this.bot.user, 'Now playing')
-							);
-						}
-					});
-					this.dispatcher.on('error', console.log);
+	private defineListeners() {
+		this.player.removeAllListeners();
+		this.player.once('error', () => {
+			this.player.disconnect();
+			this.announce.send(
+				getNotification(
+					'An error occured\nDisconnecting and destroying the player',
+					this.bot.user
+				)
+			);
+		});
+		this.player.once('end', () => {
+			this.playNext();
+		});
+		this.player.once('nodeDisconnect', () => {
+			delete this.player;
+		});
+	}
 
-					this.status = PlayerStatus.Playing;
+	public async connect(channel: VoiceChannel) {
+		this.player = await this.node.joinVoiceChannel({
+			guildID: this.guild.id,
+			voiceChannelID: channel.id,
+			deaf: true,
+		});
+		this.defineListeners();
+	}
 
-					this.sync();
-				} else {
-					this.destroy();
-				}
-			}
+	private async playNext() {
+		const next = this.queue.next();
+		if (next) {
+			this.player = await this.player.playTrack(next);
+			this.defineListeners();
+
+			this.announce.send(getSongEmbed(next, this.bot.user, 'Now playing'));
+		} else {
+			this.announce.send(
+				getNotification(
+					'No more songs in queue\nDisconnecting and destroying the player',
+					this.bot.user
+				)
+			);
 		}
 	}
 
 	public disconnect() {
 		Logger.info(
-			`Disconnecting from ${this?.channel.guild.name}:${this?.channel.name}`
+			`Disconnecting from ${this.player.voiceConnection.guildID}:${this.player.voiceConnection.voiceChannelID}`
 		);
-		this.announce.send(
-			getNotification('Disconnecting the player', this.bot.user)
-		);
-		this.status = PlayerStatus.Disconnected;
-		this.connection.disconnect();
-		delete this.connection;
-		delete this.dispatcher;
-		this.current = null;
-
-		this.sync();
-	}
-
-	public destroy() {
-		Logger.info(`Destroying player ${this?.channel.guild.name}`);
 		this.announce.send(
 			getNotification('Disconnecting and destroying the player', this.bot.user)
 		);
-		this.status = PlayerStatus.Destroyed;
-		if (this.connection.status !== 4) this.connection.disconnect();
-		delete this.connection;
-		delete this.dispatcher;
-		delete this.channel;
-		this.current = null;
-
-		this.sync();
+		this.player.disconnect();
 	}
 
 	public play() {
-		if (this.status !== PlayerStatus.Playing) {
-			this.continue();
-		}
-	}
-
-	public toObject(): Object {
-		const queueObj = this.queue.toObject();
-		return {
-			status: PlayerStatus[this.status.toString()].toLowerCase(),
-			channel: this?.channel?.id || null,
-			guild: this.guild.id,
-			queue: queueObj.queue,
-			loop: queueObj.loop,
-		};
-	}
-
-	public async sync() {
-		const playerModel = this.bot.db.model('Player', playerSchema.default);
-
-		let ref = await playerModel.findOne({
-			guild: this.guild.id,
-		});
-
-		if (!ref) {
-			const doc = this.toObject();
-			ref = new playerModel(doc);
-			await ref.save();
-		} else {
-			const obj = this.toObject();
-			for (const key in obj) {
-				ref[key] = obj[key];
-			}
-			await ref.save();
+		if (!this.queue.current) {
+			this.playNext();
 		}
 	}
 
@@ -171,18 +82,12 @@ export default class Player {
 
 	public skip(amount: number) {
 		for (let i = 0; i < amount - 1; i++) {
-			if (!this.queue.next(true)) this.destroy();
+			if (!this.queue.next(true)) this.disconnect();
 		}
-		if (simplifyPlayerStatus(this.status) === PlayerStatus.Connected) {
-			this.continue(true);
+		if (this.player) {
+			this.playNext();
 		} else {
-			if (!this.queue.next(true)) this.destroy();
+			if (!this.queue.next(true)) this.disconnect();
 		}
-
-		this.sync();
-	}
-
-	public voiceChannelUpdate() {
-		if (this.channel.members.size - 1 < 1) this.destroy();
 	}
 }

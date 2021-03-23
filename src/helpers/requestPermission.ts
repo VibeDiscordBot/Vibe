@@ -1,11 +1,10 @@
 import {
 	GuildMember,
-	MessageReaction,
+	//MessageReaction,
 	TextChannel,
 	User,
 } from 'discord.js-light';
 import Client from '../classes/Client';
-import { PlayerStatus, simplifyPlayerStatus } from '../classes/Player';
 import { getNotification } from './embed';
 
 export enum DJPermission {
@@ -41,10 +40,7 @@ export function requestPermission(
 			});
 
 		const player = await bot.guildManager.getPlayer(channel.guild);
-		const isConnected =
-			simplifyPlayerStatus(player.status) === PlayerStatus.Connected
-				? player.channel.members.find((m) => m.id === user.id)
-				: false;
+		const isConnected = player.player ? true : false;
 
 		if (permissions.includes(DJPermission.any) && isConnected)
 			return res({
@@ -67,27 +63,24 @@ export function requestPermission(
 				reason: PermissionReason.isDj,
 			});
 
-		if (simplifyPlayerStatus(player.status) === PlayerStatus.Connected) {
-			if (!isConnected)
-				return res({
-					perm: false,
-					reason: PermissionReason.notConnected,
-				});
-		}
+		if (!isConnected)
+			return res({
+				perm: false,
+				reason: PermissionReason.notConnected,
+			});
 
 		if (permissions.includes(DJPermission.alone)) {
-			if (simplifyPlayerStatus(player.status) === PlayerStatus.Connected) {
+			/*if (simplifyPlayerStatus(player.status) === PlayerStatus.Connected) {
 				if (player.channel.members.size < 3)
 					return res({
 						perm: true,
 						reason: PermissionReason.isAlone,
 					});
-			}
+			}*/
 		}
 
-		if (
-			permissions.includes(DJPermission.vote) &&
-			simplifyPlayerStatus(player.status) === PlayerStatus.Connected
+		/*if (
+			permissions.includes(DJPermission.vote) && isConnected
 		) {
 			const msg = await channel.send(
 				getNotification('Give vote permissions?', user.user)
@@ -133,11 +126,11 @@ export function requestPermission(
 						reason: PermissionReason.none,
 					});
 			});
-		} else
-			return res({
-				perm: false,
-				reason: PermissionReason.none,
-			});
+		} else*/
+		return res({
+			perm: false,
+			reason: PermissionReason.none,
+		});
 	});
 }
 

@@ -52,7 +52,6 @@ export default class extends Command {
 			const mode = parse(args[0]);
 			if (mode !== null) {
 				player.queue.setLoop(mode);
-				await player.sync();
 				message.channel.send(
 					getNotification(`Now ${toString(mode)}`, message.author)
 				);

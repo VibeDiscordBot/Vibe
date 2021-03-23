@@ -1,9 +1,6 @@
 import Command from '../classes/Command';
 import { Message } from 'discord.js-light';
-import ytsr, { Video } from 'ytsr';
-import { PlayerStatus, simplifyPlayerStatus } from '../classes/Player';
 import { getNotification } from '../helpers/embed';
-import { timestampToSeconds } from '../helpers/timestamp';
 import PermissionType from '../ts/PermissionType';
 import { DJPermission } from '../helpers/requestPermission';
 
@@ -15,38 +12,25 @@ export default class extends Command {
 	public async exec(message: Message, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(message.guild);
 
-		if (simplifyPlayerStatus(player.status) !== PlayerStatus.Disconnected) {
+		if (player.player) {
 			const query = args.join(' ');
 			const msg = await message.channel.send(
 				getNotification(`Searching for ${query}`, message.author)
 			);
-			const song = <Video>(
-				(await ytsr(query)).items.find((r) => r.type === 'video')
-			);
+			const song = await player.queue.find(query);
 
 			if (!song)
 				return message.channel.send(
 					getNotification("Your query didn't return anything", message.author)
 				);
 
-			const duration = timestampToSeconds(song.duration);
-			if (duration > 10 * 60) {
-				return message.channel.send(
-					getNotification('That song is longer than 10 minutes', message.author)
-				);
-			}
-
-			const queue = this.bot.guildManager.getQueue(message.guild);
-			queue.add({
-				author: song.author.name,
-				duration: duration,
-				name: song.title,
-				url: song.url,
-			});
-			await this.bot.guildManager.sync(message.guild);
+			player.queue.add(song);
 
 			msg.edit(
-				getNotification(`Added ${song.title} to the queue`, message.author)
+				getNotification(
+					`Added [${song.info.title}](${song.info.uri}) to the queue`,
+					message.author
+				)
 			);
 
 			player.play();

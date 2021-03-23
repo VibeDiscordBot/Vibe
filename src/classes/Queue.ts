@@ -1,13 +1,5 @@
-import { Guild } from 'discord.js-light';
-import Client from './Client';
-import * as playerSchema from '../schemas/player';
-
-export type Track = {
-	url: string;
-	name: string;
-	author: string;
-	duration: number;
-};
+import { ShoukakuTrack } from 'shoukaku';
+import Player from './Player';
 
 export enum Loop {
 	LoopTrack,
@@ -16,74 +8,68 @@ export enum Loop {
 }
 
 export default class Queue {
-	private queue: Track[] = [];
+	private queue: ShoukakuTrack[] = [];
 	private loop: Loop = Loop.NoLoop;
+	private player?: Player;
 
-	constructor(private bot: Client, public guild: Guild) {}
+	public current?: ShoukakuTrack;
 
-	public getQueue(): Track[] {
+	public setPlayer(player: Player) {
+		this.player = player;
+	}
+
+	public getQueue(): ShoukakuTrack[] {
 		return this.queue;
 	}
 
-	public next(force = false): Track | null {
+	private shift(): ShoukakuTrack | null {
+		const track = this.queue.length > 0 ? this.queue.shift() : null;
+		if (track) {
+			this.current = track;
+		} else {
+			delete this.current;
+		}
+		return track;
+	}
+
+	private get(index: number): ShoukakuTrack | null {
+		const track = this.queue[index] ? this.queue[index] : null;
+		if (track) {
+			this.current = track;
+		} else {
+			delete this.current;
+		}
+		return track;
+	}
+
+	public next(force = false): ShoukakuTrack | null {
 		if (this.queue.length < 1) return null;
 
 		if (force || this.loop === Loop.NoLoop) {
-			return this.queue.shift();
+			return this.shift();
 		} else if (this.loop === Loop.LoopQueue) {
-			const track = this.queue.shift();
+			const track = this.shift();
 			this.queue.push(track);
 			return track;
 		} else if (this.loop === Loop.LoopTrack) {
-			return this.queue[0];
+			return this.get(0);
 		}
 	}
 
-	public add(track: Track) {
+	public add(track: ShoukakuTrack) {
 		this.queue.push(track);
 	}
 
-	public toObject(): {
-		queue: Array<Object>;
-		loop: number;
-	} {
-		return (() => {
-			const result = [];
-
-			this.queue.forEach((entry) => {
-				result.push({
-					name: entry.name,
-					author: entry.author,
-					duration: entry.duration,
-					url: entry.url,
-				});
-			});
-
-			return {
-				queue: result,
-				loop: this.loop,
-			};
-		})();
-	}
-
-	public async getFromDb() {
-		const playerModel = this.bot.db.model('Player', playerSchema.default);
-
-		const ref = await playerModel.findOne({
-			guild: this.guild.id,
-		});
-
-		if (ref) {
-			(<any>ref).queue.forEach((entry) => {
-				this.add({
-					name: entry.name,
-					author: entry.author,
-					duration: entry.duration,
-					url: entry.url,
-				});
-			});
-			this.loop = (<any>ref).loop;
-		}
+	public async find(query: string): Promise<ShoukakuTrack | null> {
+		const result = await this.player.node.rest.resolve(query, 'youtube');
+		if (!result) return null;
+		result.tracks.map(
+			(track) => (track.info.length = Math.round(track.info.length / 1000))
+		);
+		const eligable = result.tracks.filter(
+			(track) => track.info.length < 10 * 60
+		);
+		return eligable.length > 0 ? eligable[0] : null;
 	}
 
 	public clear() {

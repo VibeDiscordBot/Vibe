@@ -10,9 +10,9 @@ export default class extends Command {
 
 	public async exec(message: Message, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(message.guild);
-		if (player.current) {
+		if (player.queue.current) {
 			message.channel.send(
-				getSongEmbed(player.current, message.author, 'Now playing')
+				getSongEmbed(player.queue.current, message.author, 'Now playing')
 			);
 		} else {
 			message.channel.send(

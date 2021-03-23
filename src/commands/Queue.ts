@@ -13,7 +13,7 @@ export default class extends Command {
 		const player = await this.bot.guildManager.getPlayer(message.guild);
 		const queue = player.queue.getQueue();
 
-		if (!player.current && queue.length < 1) {
+		if (!player.queue.current && queue.length < 1) {
 			message.channel.send(
 				getNotification('The queue is empty', message.author)
 			);
@@ -24,16 +24,16 @@ export default class extends Command {
 
 			let text = '';
 
-			if (player.current) {
-				text += `[🎵] [${player.current.name}](${
-					player.current.url
-				}) [${secondsToTimestamp(player.current.duration)}]`;
+			if (player.queue.current) {
+				text += `[🎵] [${player.queue.current.info.title}](${
+					player.queue.current.info.uri
+				}) [${secondsToTimestamp(player.queue.current.info.length)}]`;
 			}
 			for (let i = 0; i < queue.length; i++) {
 				const track = queue[i];
-				text += `${text !== '' ? '\n' : ''}[${i + 1}] [${track.name}](${
-					track.url
-				}) [${secondsToTimestamp(track.duration)}]`;
+				text += `${text !== '' ? '\n' : ''}[${i + 1}] [${track.info.title}](${
+					track.info.uri
+				}) [${secondsToTimestamp(track.info.length)}]`;
 			}
 
 			embed.setDescription(text);
