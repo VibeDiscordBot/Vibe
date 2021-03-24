@@ -3,7 +3,29 @@ import Client from './Client';
 import Queue from './Queue';
 import Logger from './Logger';
 import { getNotification, getSongEmbed } from '../helpers/embed';
-import { ShoukakuPlayer, ShoukakuSocket } from 'shoukaku';
+import {
+	DistortionValue,
+	KaraokeValue,
+	RotationValue,
+	ShoukakuPlayer,
+	ShoukakuSocket,
+	TimescaleValue,
+	TremoloValue,
+	VibratoValue,
+} from 'shoukaku';
+
+export enum AudioEffect {
+	Distortion,
+	Volume,
+	Karaoke,
+	Rotation,
+	Timescale,
+	Tremolo,
+	Vibrato,
+
+	//Timescale Based audio effects
+	Nightcore,
+}
 
 export default class Player {
 	public node: ShoukakuSocket;
@@ -88,6 +110,91 @@ export default class Player {
 			this.playNext();
 		} else {
 			if (!this.queue.next(true)) this.disconnect();
+		}
+	}
+
+	public async setEffect(effect: AudioEffect, value: number) {
+		value = value < 0 ? null : value;
+		switch (effect) {
+			case AudioEffect.Distortion:
+				{
+					const v: DistortionValue = value
+						? {
+								scale: value,
+						  }
+						: null;
+					this.player = await this.player.setDistortion(v);
+				}
+				break;
+			case AudioEffect.Volume:
+				{
+					const v: number = value ? value : 1;
+					this.player = await this.player.setVolume(v);
+				}
+				break;
+			case AudioEffect.Karaoke:
+				{
+					const v: KaraokeValue = value
+						? {
+								level: value,
+						  }
+						: null;
+					this.player = await this.player.setKaraoke(v);
+				}
+				break;
+			case AudioEffect.Rotation:
+				{
+					const v: RotationValue = value
+						? {
+								rotationHz: value,
+						  }
+						: null;
+					this.player = await this.player.setRotation(v);
+				}
+				break;
+			case AudioEffect.Timescale:
+				{
+					const v: TimescaleValue = value
+						? {
+								speed: value,
+						  }
+						: {
+								speed: 1,
+						  };
+					this.player = await this.player.setTimescale(v);
+				}
+				break;
+			case AudioEffect.Tremolo:
+				{
+					const v: TremoloValue = value
+						? {
+								frequency: value,
+						  }
+						: null;
+					this.player = await this.player.setTremolo(v);
+				}
+				break;
+			case AudioEffect.Vibrato:
+				{
+					const v: VibratoValue = value
+						? {
+								frequency: value,
+						  }
+						: null;
+					this.player = await this.player.setVibrato(v);
+				}
+				break;
+			case AudioEffect.Nightcore:
+				{
+					const v: TimescaleValue = value
+						? {
+								pitch: 2.5,
+								rate: 2.5,
+						  }
+						: null;
+					this.player = await this.player.setTimescale(v);
+				}
+				break;
 		}
 	}
 }
