@@ -15,6 +15,7 @@
         "@typescript-eslint/explicit-module-boundary-types": 0,
         "@typescript-eslint/ban-types": 0,
         "@typescript-eslint/no-unused-vars": 0,
-        "unused-imports/no-unused-imports": 2
+        "unused-imports/no-unused-imports": 2,
+        "no-mixed-spaces-and-tabs": 0
     }
 }
