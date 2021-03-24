@@ -188,8 +188,8 @@ export default class Player {
 				{
 					const v: TimescaleValue = value
 						? {
-								pitch: 2.5,
-								rate: 2.5,
+								pitch: 1.25,
+								rate: 1.25,
 						  }
 						: null;
 					this.player = await this.player.setTimescale(v);
