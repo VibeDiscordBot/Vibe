@@ -9,11 +9,11 @@ RUN mv docker-compose-wait/target/release/wait /wait
 WORKDIR /opt/vibe
 
 COPY ./tsconfig.json .
-COPY ./.env .
 
 COPY ./package.json .
 RUN yarn --frozen-lockfile --production
 
+COPY ./.env .
 COPY src src
 
 CMD ["/wait", "&&", "yarn", "start"]
