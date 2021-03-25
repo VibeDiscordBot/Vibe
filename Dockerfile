@@ -1,14 +1,19 @@
 FROM node:15
 
-ENV WAIT_VERSION 2.7.2
-ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
-RUN chmod +x /wait
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+RUN git clone https://github.com/ufoscout/docker-compose-wait && \
+ cd docker-compose-wait && \
+ ${HOME}/.cargo/bin/cargo build --release
+RUN mv docker-compose-wait/target/release/wait /wait
 
 WORKDIR /opt/vibe
 
-COPY ./package.json .
-RUN yarn
+COPY ./tsconfig.json .
+COPY ./.env .
 
-COPY . .
+COPY ./package.json .
+RUN yarn --frozen-lockfile --production
+
+COPY src src
 
 CMD ["/wait", "&&", "yarn", "start"]
