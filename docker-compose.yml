@@ -6,7 +6,6 @@ services:
       - ./application.yml:/opt/Lavalink/application.yml
     ports: 
       - 2333:2333
-    privileged: true
   bot:
     build: .
     environment: 
