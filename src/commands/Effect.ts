@@ -30,6 +30,9 @@ function parseEffect(text: string): AudioEffect | null {
 		case 'nc':
 			return AudioEffect.Nightcore;
 
+		case 'bass':
+			return AudioEffect.Bass;
+
 		default:
 			return null;
 	}

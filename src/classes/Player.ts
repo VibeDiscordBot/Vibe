@@ -5,6 +5,7 @@ import Logger from './Logger';
 import { getNotification, getSongEmbed } from '../helpers/embed';
 import {
 	DistortionValue,
+	EqualizerBand,
 	KaraokeValue,
 	RotationValue,
 	ShoukakuPlayer,
@@ -25,6 +26,9 @@ export enum AudioEffect {
 
 	//Timescale Based audio effects
 	Nightcore,
+
+	//EQ Based audio effects
+	Bass,
 }
 
 export default class Player {
@@ -193,6 +197,27 @@ export default class Player {
 						  }
 						: null;
 					this.player = await this.player.setTimescale(v);
+				}
+				break;
+			case AudioEffect.Bass:
+				{
+					const v: EqualizerBand[] = value
+						? [
+								{
+									band: 0,
+									gain: value / 4,
+								},
+								{
+									band: 1,
+									gain: value / 4,
+								},
+								{
+									band: 2,
+									gain: value / 4,
+								},
+						  ]
+						: [];
+					this.player = await this.player.setEqualizer(v);
 				}
 				break;
 		}
