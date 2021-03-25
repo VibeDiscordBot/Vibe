@@ -6,3 +6,8 @@ services:
       - ./application.yml:/opt/Lavalink/application.yml
     ports: 
       - 2333:2333
+  bot:
+    build: .
+    environment: 
+      - WAIT_HOSTS=lavalink:2333
+    command: sh -c "/wait && yarn start"
