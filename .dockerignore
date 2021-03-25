@@ -1,0 +1,11 @@
+logs/
+node_modules/
+lavalink/
+.husky/
+.idea/
+*.example
+.eslintrc.json
+.gitignore
+.prettierrc.yml
+deamon.sh
+yarn.lock
