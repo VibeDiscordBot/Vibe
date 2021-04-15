@@ -10,6 +10,7 @@ import {
 	RotationValue,
 	ShoukakuPlayer,
 	ShoukakuSocket,
+	ShoukakuStatus,
 	TimescaleValue,
 	TremoloValue,
 	VibratoValue,
@@ -221,5 +222,14 @@ export default class Player {
 				}
 				break;
 		}
+	}
+
+	get connected(): boolean {
+		if (!this.player) return false;
+		if (!this.player.voiceConnection) return false;
+
+		if (this.player.voiceConnection.state === ShoukakuStatus.CONNECTED)
+			return true;
+		return false;
 	}
 }

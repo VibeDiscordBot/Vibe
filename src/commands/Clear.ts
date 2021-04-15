@@ -15,7 +15,7 @@ export default class extends Command {
 
 	public async exec(message: Message, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(message.guild);
-		if (player.player) {
+		if (player.connected) {
 			message.channel.send(
 				getNotification('Please disconnect me first', message.author)
 			);

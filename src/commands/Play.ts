@@ -12,7 +12,7 @@ export default class extends Command {
 	public async exec(message: Message, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(message.guild);
 
-		if (player.player) {
+		if (player.connected) {
 			const query = args.join(' ');
 			const msg = await message.channel.send(
 				getNotification(`Searching for ${query}`, message.author)
