@@ -232,4 +232,12 @@ export default class Player {
 			return true;
 		return false;
 	}
+
+	get channel(): VoiceChannel {
+		if (!this.player) return null;
+		if (!this.player.voiceConnection) return null;
+		return this.bot.guilds
+			.forge(this.player.voiceConnection.guildID)
+			.channels.forge(this.player.voiceConnection.voiceChannelID, 'voice');
+	}
 }

@@ -1,6 +1,6 @@
 import {
 	GuildMember,
-	//MessageReaction,
+	MessageReaction,
 	TextChannel,
 	User,
 } from 'discord.js-light';
@@ -40,7 +40,7 @@ export function requestPermission(
 			});
 
 		const player = await bot.guildManager.getPlayer(channel.guild);
-		const isConnected = player.player ? true : false;
+		const isConnected = player.connected;
 
 		if (permissions.includes(DJPermission.any) && isConnected)
 			return res({
@@ -70,18 +70,17 @@ export function requestPermission(
 			});
 
 		if (permissions.includes(DJPermission.alone)) {
-			/*if (simplifyPlayerStatus(player.status) === PlayerStatus.Connected) {
-				if (player.channel.members.size < 3)
+			if (player.connected) {
+				if (player.channel.members.size < 3) {
 					return res({
 						perm: true,
 						reason: PermissionReason.isAlone,
 					});
-			}*/
+				}
+			}
 		}
 
-		/*if (
-			permissions.includes(DJPermission.vote) && isConnected
-		) {
+		if (permissions.includes(DJPermission.vote) && isConnected) {
 			const msg = await channel.send(
 				getNotification('Give vote permissions?', user.user)
 			);
@@ -126,11 +125,11 @@ export function requestPermission(
 						reason: PermissionReason.none,
 					});
 			});
-		} else*/
-		return res({
-			perm: false,
-			reason: PermissionReason.none,
-		});
+		} else
+			return res({
+				perm: false,
+				reason: PermissionReason.none,
+			});
 	});
 }
 
