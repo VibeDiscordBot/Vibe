@@ -10,7 +10,6 @@ import {
 	RotationValue,
 	ShoukakuPlayer,
 	ShoukakuSocket,
-	ShoukakuStatus,
 	TimescaleValue,
 	TremoloValue,
 	VibratoValue,
@@ -228,8 +227,7 @@ export default class Player {
 		if (!this.player) return false;
 		if (!this.player.voiceConnection) return false;
 
-		if (this.player.voiceConnection.state === ShoukakuStatus.CONNECTED)
-			return true;
+		if (this.player.voiceConnection.state === 'CONNECTED') return true;
 		return false;
 	}
 
@@ -239,5 +237,11 @@ export default class Player {
 		return this.bot.guilds
 			.forge(this.player.voiceConnection.guildID)
 			.channels.forge(this.player.voiceConnection.voiceChannelID, 'voice');
+	}
+
+	public update() {
+		if (this.channel.members.size < 2) {
+			this.disconnect();
+		}
 	}
 }
