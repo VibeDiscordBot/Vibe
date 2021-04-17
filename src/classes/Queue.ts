@@ -73,6 +73,7 @@ export default class Queue {
 	}
 
 	public clear() {
+		this.current = null;
 		this.queue = [];
 	}
 
