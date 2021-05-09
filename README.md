@@ -7,7 +7,7 @@
 <br />
 <br />
 <br />
-<h2><a>Invite</a> the public hosted version of Vibe</h2>
+<h2><a href="#">Invite</a> the public hosted version of Vibe (currently unavailable)</h2>
 <h3>or</h3>
 <h2><a href="docs/selfhosting.md">Host Vibe yourself</a></h2>
 </center>
