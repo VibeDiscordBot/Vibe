@@ -21,6 +21,7 @@ import GuildManager from './managers/GuildManager';
 import mongoose from 'mongoose';
 import Logger from './Logger';
 import ShoukakuManager from './managers/ShoukakuManager';
+import MongoDB from './wrappers/MongoDB';
 
 export default class Client extends djs.Client {
 	public cfg: {
@@ -35,7 +36,7 @@ export default class Client extends djs.Client {
 
 	public commandHandler: CommandHandler;
 	public guildManager: GuildManager;
-	public db: typeof mongoose;
+	public db: MongoDB;
 	public shoukaku: ShoukakuManager;
 
 	constructor() {
@@ -74,7 +75,7 @@ export default class Client extends djs.Client {
 					}
 				)
 				.then((db) => {
-					this.db = db;
+					this.db = new MongoDB(db);
 					res();
 				});
 
@@ -94,7 +95,7 @@ export default class Client extends djs.Client {
 
 		delete this.guildManager;
 
-		await this.db.connection.close();
+		await this.db._.connection.close();
 		delete this.db;
 	}
 
