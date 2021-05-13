@@ -56,7 +56,7 @@ export default class EventHandler extends Handler {
 							);
 							break;
 						case 'mongoose':
-							this.bot.db.connection[instance.once ? 'once' : 'on'](
+							this.bot.db._.connection[instance.once ? 'once' : 'on'](
 								instance.type.name,
 								(...args: any[]) => {
 									instance.exec(...args);
