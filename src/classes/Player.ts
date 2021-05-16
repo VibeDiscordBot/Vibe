@@ -283,15 +283,18 @@ export default class Player {
 			_id: this.guild.id,
 			channelId: this.channel?.id || null,
 			loop: this.queue.getLoop(),
-			queue: this.queue.getQueue().map(
-				(track) =>
-					(track = <any>{
-						name: track.info.title,
-						author: track.info.author,
-						duration: track.info.length,
-						url: track.info.uri,
-					})
-			),
+			queue: [
+				this.queue.current || null,
+				this.queue.getQueue().map(
+					(track) =>
+						(track = <any>{
+							name: track.info.title,
+							author: track.info.author,
+							duration: track.info.length,
+							url: track.info.uri,
+						})
+				),
+			].filter((el) => el != null),
 			status: this.player?.voiceConnection?.state || 'NULL',
 		});
 

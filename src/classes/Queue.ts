@@ -73,6 +73,8 @@ export default class Queue {
 
 	public add(track: ShoukakuTrack) {
 		this.queue.push(track);
+
+		this.player?.requestSync();
 	}
 
 	public async find(query: string): Promise<ShoukakuTrack | null> {
