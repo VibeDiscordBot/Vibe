@@ -58,7 +58,10 @@ export default class Queue {
 	}
 
 	public next(force = false): ShoukakuTrack | null {
-		if (this.queue.length < 1) return null;
+		if (this.queue.length < 1) {
+			this.clear();
+			return null;
+		}
 
 		if (force || this.loop === Loop.NoLoop) {
 			return this.shift();
