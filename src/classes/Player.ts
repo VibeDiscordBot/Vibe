@@ -18,17 +18,7 @@ import Client from './Client';
 import Queue from './Queue';
 import Logger from './Logger';
 import { getNotification, getSongEmbed } from '../helpers/embed';
-import {
-	DistortionValue,
-	EqualizerBand,
-	KaraokeValue,
-	RotationValue,
-	ShoukakuPlayer,
-	ShoukakuSocket,
-	TimescaleValue,
-	TremoloValue,
-	VibratoValue,
-} from 'shoukaku';
+import { ShoukakuPlayer, ShoukakuSocket } from 'shoukaku';
 import { PlayerSchema } from '../schemas/player';
 import wait from '../helpers/wait';
 
@@ -46,6 +36,17 @@ export enum AudioEffect {
 
 	//EQ Based audio effects
 	Bass,
+}
+
+function getNumberInBounds(
+	source: number,
+	min: number,
+	max: number,
+	belowMinIsNull = false
+): number {
+	if (source < min) return belowMinIsNull ? null : min;
+	if (source > max) return max;
+	return source;
 }
 
 export default class Player {
@@ -148,106 +149,73 @@ export default class Player {
 	}
 
 	public async setEffect(effect: AudioEffect, value: number) {
-		value = value < 0 ? null : value;
 		switch (effect) {
 			case AudioEffect.Distortion:
-				{
-					const v: DistortionValue = value
-						? {
-								scale: value,
-						  }
-						: null;
-					this.player = await this.player.setDistortion(v);
-				}
+				this.player = await this.player.setDistortion({
+					scale: getNumberInBounds(value, 1, 10, true),
+				});
 				break;
 			case AudioEffect.Volume:
-				{
-					const v: number = value ? value : 1;
-					this.player = await this.player.setVolume(v);
-				}
+				this.player = await this.player.setVolume(
+					getNumberInBounds(value, 0, 10)
+				);
 				break;
 			case AudioEffect.Karaoke:
-				{
-					const v: KaraokeValue = value
-						? {
-								level: value,
-						  }
-						: null;
-					this.player = await this.player.setKaraoke(v);
-				}
+				this.player = await this.player.setKaraoke({
+					level: getNumberInBounds(value, 1, 10, true),
+				});
 				break;
 			case AudioEffect.Rotation:
-				{
-					const v: RotationValue = value
-						? {
-								rotationHz: value,
-						  }
-						: null;
-					this.player = await this.player.setRotation(v);
-				}
+				this.player = await this.player.setRotation({
+					rotationHz: getNumberInBounds(value, 0.1, 1, true),
+				});
 				break;
 			case AudioEffect.Timescale:
-				{
-					const v: TimescaleValue = value
-						? {
-								speed: value,
-						  }
-						: {
-								speed: 1,
-						  };
-					this.player = await this.player.setTimescale(v);
-				}
+				this.player = await this.player.setTimescale({
+					speed: getNumberInBounds(value, 1, 10),
+				});
 				break;
 			case AudioEffect.Tremolo:
-				{
-					const v: TremoloValue = value
-						? {
-								frequency: value,
-						  }
-						: null;
-					this.player = await this.player.setTremolo(v);
-				}
+				this.player = await this.player.setTremolo({
+					frequency: getNumberInBounds(value, 0.1, 14, true),
+				});
 				break;
 			case AudioEffect.Vibrato:
-				{
-					const v: VibratoValue = value
-						? {
-								frequency: value,
-						  }
-						: null;
-					this.player = await this.player.setVibrato(v);
-				}
+				this.player = await this.player.setVibrato({
+					frequency: getNumberInBounds(value, 1, 25, true),
+				});
 				break;
 			case AudioEffect.Nightcore:
-				{
-					const v: TimescaleValue = value
-						? {
+				this.player = await this.player.setTimescale(
+					value < 1
+						? null
+						: {
 								pitch: 1.25,
 								rate: 1.25,
 						  }
-						: null;
-					this.player = await this.player.setTimescale(v);
-				}
+				);
 				break;
 			case AudioEffect.Bass:
 				{
-					const v: EqualizerBand[] = value
-						? [
-								{
-									band: 0,
-									gain: value / 4,
-								},
-								{
-									band: 1,
-									gain: value / 4,
-								},
-								{
-									band: 2,
-									gain: value / 4,
-								},
-						  ]
-						: [];
-					this.player = await this.player.setEqualizer(v);
+					const val = getNumberInBounds(value, 1, 12, true);
+					this.player = await this.player.setEqualizer(
+						val
+							? [
+									{
+										band: 0,
+										gain: value / 4,
+									},
+									{
+										band: 1,
+										gain: value / 4,
+									},
+									{
+										band: 2,
+										gain: value / 4,
+									},
+							  ]
+							: []
+					);
 				}
 				break;
 		}
