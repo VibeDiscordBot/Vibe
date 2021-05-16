@@ -29,6 +29,8 @@ export default class GuildManager {
 			const player = new Player(this.bot, guild, queue);
 			queue.setPlayer(player);
 			this.players.set(guild.id, player);
+
+			player.requestSync();
 		}
 	}
 

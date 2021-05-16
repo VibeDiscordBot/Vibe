@@ -13,36 +13,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Schema } from 'mongoose';
-import { ShoukakuStatus } from 'shoukaku';
-import { Loop } from '../classes/Queue';
-
-export interface Player {
-	status: ShoukakuStatus | 'NULL';
-	channelId: string;
-	queue: {
-		name: string;
-		author: string;
-		duration: number;
-		url: string;
-	}[];
-	loop: Loop;
+export default function wait(time: number): Promise<void> {
+	return new Promise((res) => {
+		setTimeout(() => {
+			res();
+		}, time);
+	});
 }
-
-export const PlayerSchema = new Schema({
-	status: {
-		type: String,
-		enum: ['CONNECTED', 'CONNECTING', 'DISCONNECTED', 'DISCONNECTING', 'NULL'], // ShoukakuStatus
-	},
-	channelId: String,
-	queue: [
-		{
-			name: String,
-			author: String,
-			duration: Number,
-			url: String,
-		},
-	],
-	loop: Number,
-	_id: String,
-});

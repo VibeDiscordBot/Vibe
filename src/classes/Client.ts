@@ -18,7 +18,6 @@ import * as path from 'path';
 import CommandHandler from '../handlers/CommandHandler';
 import EventHandler from '../handlers/EventHandler';
 import GuildManager from './managers/GuildManager';
-import mongoose from 'mongoose';
 import Logger from './Logger';
 import ShoukakuManager from './managers/ShoukakuManager';
 import MongoDB from './wrappers/MongoDB';
@@ -64,22 +63,26 @@ export default class Client extends djs.Client {
 			this.guildManager = new GuildManager(this);
 			this.shoukaku = new ShoukakuManager(this);
 
-			mongoose
-				.connect(
-					`mongodb://${process.env.MONGODB_HOST}/${
-						process.env.MONGODB_DATABASE || 'vibe'
-					}`,
-					{
-						useNewUrlParser: true,
-						useUnifiedTopology: true,
-					}
-				)
-				.then((db) => {
-					this.db = new MongoDB(db);
-					res();
-				});
+			const username =
+				process.env.MONGODB_USERNAME && process.env.MONGODB_USERNAME !== ''
+					? process.env.MONGODB_USERNAME
+					: null;
+			const password =
+				process.env.MONGODB_PASSWORD && process.env.MONGODB_PASSWORD !== ''
+					? process.env.MONGODB_PASSWORD
+					: null;
+
+			this.db = await MongoDB.create(
+				process.env.MONGODB_HOST,
+				process.env.MONGODB_DATABASE || 'vibe',
+				username,
+				password,
+				process.env.MONGODB_AUTH_SOURCE
+			);
 
 			await eventHandler.build();
+
+			res();
 		});
 	}
 

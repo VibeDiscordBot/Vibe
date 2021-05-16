@@ -13,36 +13,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Schema } from 'mongoose';
-import { ShoukakuStatus } from 'shoukaku';
-import { Loop } from '../classes/Queue';
+export default function updateProperties<T>(source: any, target: any): T {
+	for (const name in source) {
+		target[name] = source[name];
+	}
 
-export interface Player {
-	status: ShoukakuStatus | 'NULL';
-	channelId: string;
-	queue: {
-		name: string;
-		author: string;
-		duration: number;
-		url: string;
-	}[];
-	loop: Loop;
+	return target;
 }
-
-export const PlayerSchema = new Schema({
-	status: {
-		type: String,
-		enum: ['CONNECTED', 'CONNECTING', 'DISCONNECTED', 'DISCONNECTING', 'NULL'], // ShoukakuStatus
-	},
-	channelId: String,
-	queue: [
-		{
-			name: String,
-			author: String,
-			duration: Number,
-			url: String,
-		},
-	],
-	loop: Number,
-	_id: String,
-});

@@ -16,6 +16,12 @@ MONGODB_HOST=The IP of your MongoDB server, when running using docker-compose 12
 
 MONGODB_DATABASE=The name of the database that Vibe will use/create on your MongoDB server, if running using docker-compose vibe (default) is fine
 
+MONGODB_USERNAME=The username to authenticate with your MongoDB server, leave empty when running without authentication
+
+MONGODB_PASSWORD=The password to authenticate with your MongoDB server, leave empty when running without authentication
+
+MONGODB_AUTH_SOURCE=The name of the authentication database of your MongoDB server
+
 BOT_PREFIX=The prefix you want to set for this bot when invoking commands, you can pick anything you'd like for this
 
 LAVALINK_HOST=The IP of your Lavalink server, when running using docker-compose 127.0.0.1 (default) is fine

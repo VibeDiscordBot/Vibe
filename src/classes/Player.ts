@@ -29,6 +29,8 @@ import {
 	TremoloValue,
 	VibratoValue,
 } from 'shoukaku';
+import { PlayerSchema } from '../schemas/player';
+import wait from '../helpers/wait';
 
 export enum AudioEffect {
 	Distortion,
@@ -51,6 +53,11 @@ export default class Player {
 	public player?: ShoukakuPlayer;
 
 	private announce: TextChannel;
+
+	private willPushToDb = {
+		willPush: false,
+		lock: false,
+	};
 
 	constructor(protected bot: Client, public guild: Guild, public queue: Queue) {
 		this.node = this.bot.shoukaku.getNode();
@@ -82,6 +89,8 @@ export default class Player {
 			deaf: true,
 		});
 		this.defineListeners();
+
+		this.requestSync();
 	}
 
 	private async playNext() {
@@ -91,6 +100,8 @@ export default class Player {
 			this.defineListeners();
 
 			this.announce.send(getSongEmbed(next, this.bot.user, 'Now playing'));
+
+			this.requestSync();
 		} else {
 			this.announce.send(
 				getNotification(
@@ -98,6 +109,8 @@ export default class Player {
 					this.bot.user
 				)
 			);
+
+			this.disconnect();
 		}
 	}
 
@@ -109,6 +122,8 @@ export default class Player {
 			getNotification('Disconnecting and destroying the player', this.bot.user)
 		);
 		this.player.disconnect();
+
+		this.requestSync();
 	}
 
 	public play() {
@@ -257,6 +272,45 @@ export default class Player {
 	public update() {
 		if (this.channel.members.size < 2) {
 			this.disconnect();
+		}
+	}
+
+	private async pushToDb() {
+		this.willPushToDb.lock = true;
+
+		const collection = this.bot.db.getCollection('Player', PlayerSchema);
+		await this.bot.db.setById(collection, this.guild.id, {
+			_id: this.guild.id,
+			channelId: this.channel?.id || null,
+			loop: this.queue.getLoop(),
+			queue: this.queue.getQueue().map(
+				(track) =>
+					(track = <any>{
+						name: track.info.title,
+						author: track.info.author,
+						duration: track.info.length,
+						url: track.info.uri,
+					})
+			),
+			status: this.player?.voiceConnection?.state || 'NULL',
+		});
+
+		this.willPushToDb.willPush = false;
+		this.willPushToDb.lock = false;
+	}
+
+	public async requestSync() {
+		if (!this.willPushToDb.willPush) {
+			this.willPushToDb.willPush = true;
+
+			if (!this.willPushToDb.lock) {
+				this.pushToDb();
+			} else {
+				while (this.willPushToDb.lock) {
+					await wait(500);
+				}
+				this.pushToDb();
+			}
 		}
 	}
 }
