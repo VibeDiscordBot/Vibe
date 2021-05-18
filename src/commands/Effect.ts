@@ -76,12 +76,17 @@ export default class extends Command {
 				)
 			);
 
-		await player.setEffect(effect, value);
-		message.channel.send(
-			getNotification(
-				`Set ${AudioEffect[effect]} to ${value.toString()}`,
-				message.author
-			)
-		);
+		if (await player.setEffect(effect, value)) {
+			message.channel.send(
+				getNotification(
+					`Set ${AudioEffect[effect]} to ${value.toString()}`,
+					message.author
+				)
+			);
+		} else {
+			message.channel.send(
+				getNotification('Something went wrong, nothing changed', message.author)
+			);
+		}
 	}
 }

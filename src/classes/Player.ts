@@ -148,7 +148,9 @@ export default class Player {
 		}
 	}
 
-	public async setEffect(effect: AudioEffect, value: number) {
+	public async setEffect(effect: AudioEffect, value: number): Promise<boolean> {
+		return false; // Effects are disabled untill cog-creators lavalink jar supports effects
+
 		switch (effect) {
 			case AudioEffect.Distortion:
 				this.player = await this.player.setDistortion({
@@ -219,6 +221,8 @@ export default class Player {
 				}
 				break;
 		}
+
+		return true;
 	}
 
 	get connected(): boolean {

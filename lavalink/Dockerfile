@@ -7,6 +7,6 @@ RUN apt-get update && \
 
 WORKDIR /opt/Lavalink
 
-RUN curl https://ci.fredboat.com/guestAuth/repository/download/Lavalink_Build/.lastSuccessful/Lavalink.jar?branch=refs/heads/dev --output Lavalink.jar
+RUN curl https://github.com/Cog-Creators/Lavalink-Jars/releases/download/3.3.2.3_1212/Lavalink.jar --output Lavalink.jar -L
 
 ENTRYPOINT ["java", "-Djdk.tls.client.protocols=TLSv1.1,TLSv1.2", "-Xmx4G", "-jar", "Lavalink.jar"]

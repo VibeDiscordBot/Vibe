@@ -1449,10 +1449,18 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-shoukaku@^1.6.3:
+shoukaku@^1.6.4:
   version "1.6.4"
   resolved "https://registry.yarnpkg.com/shoukaku/-/shoukaku-1.6.4.tgz#23710b221239505aaa2d9bc3c20c2ad26b52bb91"
   integrity sha512-qDtaqJ4zLQKOb2/Z+4NBAna9g70ZAX1JbRSlmAnZXI2Ayh+d+6pCNIUg0MWWGP6zBWJgLf+dzzfSdRIUFtDRzw==
+  dependencies:
+    abort-controller "^3.0.0"
+    node-fetch "^2.6.1"
+    ws "^7.4.4"
+
+"shoukaku@https://github.com/112batman/Vibe-Shoukaku":
+  version "1.6.4"
+  resolved "https://github.com/112batman/Vibe-Shoukaku#64d830827baa7e2509d0740b53736383cfb7df71"
   dependencies:
     abort-controller "^3.0.0"
     node-fetch "^2.6.1"
