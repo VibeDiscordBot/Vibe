@@ -1,5 +1,7 @@
 <center>
 <h1>Vibe</h1>
+<h2><span style="font-size: 200%;">❗</span> Vibe is still in beta and is almost guaranteed to have breaking bugs</h2>
+<br />
 <img src="docs/assets/logo.png" width="256px">
 <br />
 <br />
