@@ -116,7 +116,7 @@ export default class Player {
 	}
 
 	public disconnect() {
-		Logger.info(
+		Logger.debug(
 			`Disconnecting from ${this.player.voiceConnection.guildID}:${this.player.voiceConnection.voiceChannelID}`
 		);
 		this.announce.send(

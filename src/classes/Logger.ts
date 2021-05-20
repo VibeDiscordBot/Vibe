@@ -16,6 +16,8 @@
 import 'colors';
 
 export default class Logger {
+	public static logDebug = false;
+
 	private static log(key: string, text: string) {
 		console.log('['.bold + key + ']'.bold + ' ' + text);
 	}
@@ -26,5 +28,10 @@ export default class Logger {
 
 	public static error(text: string) {
 		this.log('Error'.red, text);
+	}
+
+	public static debug(text: string) {
+		if (!this.logDebug) return;
+		this.log('Debug'.grey, text);
 	}
 }
