@@ -32,7 +32,8 @@ export default class extends Event {
 
 			switch (await this.bot.commandHandler.run(message, args, label)) {
 				case CommandResponse.Unknown:
-					message.channel.send(`Unknown command "${label}"`);
+					if (this.bot.cfg.unknowCommandMessages)
+						message.channel.send(`Unknown command "${label}"`);
 					break;
 				case CommandResponse.InsufficientPermissions:
 					message.channel.send('I have insufficient permissions');

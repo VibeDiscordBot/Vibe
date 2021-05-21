@@ -31,6 +31,7 @@ export default class Client extends djs.Client {
 		};
 		prefix: string;
 		ownerId: string;
+		unknowCommandMessages: boolean;
 	};
 
 	public commandHandler: CommandHandler;
@@ -49,6 +50,7 @@ export default class Client extends djs.Client {
 			},
 			prefix: process.env.BOT_PREFIX,
 			ownerId: '464287642356285442',
+			unknowCommandMessages: false,
 		};
 	}
 
