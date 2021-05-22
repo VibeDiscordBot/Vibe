@@ -15,6 +15,7 @@
 
 import Event from '../classes/Event';
 import Logger from '../classes/Logger';
+import wait from '../helpers/wait';
 
 export default class extends Event {
 	public name = 'Ready (client)';
@@ -27,5 +28,8 @@ export default class extends Event {
 				this.bot.shard ? `[shard ${this.bot.shard.ids[0]}]` : '[client]'
 			} Is ready`
 		);
+
+		await wait(5000);
+		this.bot.reconnectAll();
 	}
 }

@@ -64,11 +64,15 @@ export default class Player {
 		this.node = this.bot.shoukaku.getNode();
 	}
 
+	private async sendAnnounce(content: any) {
+		return (await this.announce?.send(content)) || null;
+	}
+
 	private defineListeners() {
 		this.player.removeAllListeners();
 		this.player.once('error', () => {
 			this.player.disconnect();
-			this.announce.send(
+			this.sendAnnounce(
 				getNotification(
 					'An error occured\nDisconnecting and destroying the player',
 					this.bot.user
@@ -100,11 +104,11 @@ export default class Player {
 			this.player = await this.player.playTrack(next);
 			this.defineListeners();
 
-			this.announce.send(getSongEmbed(next, this.bot.user, 'Now playing'));
+			this.sendAnnounce(getSongEmbed(next, this.bot.user, 'Now playing'));
 
 			this.requestSync();
 		} else {
-			this.announce.send(
+			this.sendAnnounce(
 				getNotification(
 					'No more songs in queue\nDisconnecting and destroying the player',
 					this.bot.user
@@ -119,7 +123,7 @@ export default class Player {
 		Logger.debug(
 			`Disconnecting from ${this.player.voiceConnection.guildID}:${this.player.voiceConnection.voiceChannelID}`
 		);
-		this.announce.send(
+		this.sendAnnounce(
 			getNotification('Disconnecting and destroying the player', this.bot.user)
 		);
 		this.player.disconnect();
@@ -135,6 +139,8 @@ export default class Player {
 
 	public setAnnounce(announce: TextChannel) {
 		this.announce = announce;
+
+		this.requestSync();
 	}
 
 	public skip(amount: number) {
@@ -251,23 +257,17 @@ export default class Player {
 		this.willPushToDb.lock = true;
 
 		const collection = this.bot.db.getCollection('Player', PlayerSchema);
+
 		await this.bot.db.setById(collection, this.guild.id, {
 			_id: this.guild.id,
 			channelId: this.channel?.id || null,
 			loop: this.queue.getLoop(),
 			queue: [
-				this.queue.current || null,
-				this.queue.getQueue().map(
-					(track) =>
-						(track = <any>{
-							name: track.info.title,
-							author: track.info.author,
-							duration: track.info.length,
-							url: track.info.uri,
-						})
-				),
+				this.queue.current?.track || null,
+				...this.queue.getQueue().map((track) => (track = <any>track.track)),
 			].filter((el) => el != null),
 			status: this.player?.voiceConnection?.state || 'NULL',
+			announceId: this.announce?.id || null,
 		});
 
 		this.willPushToDb.willPush = false;

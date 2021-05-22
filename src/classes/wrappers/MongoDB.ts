@@ -121,4 +121,8 @@ export default class MongoDB {
 			value
 		);
 	}
+
+	public async getAll<T>(collection: Collection): Promise<Doc<T>[]> {
+		return <any>await collection.find();
+	}
 }

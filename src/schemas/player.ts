@@ -20,13 +20,9 @@ import { Loop } from '../classes/Queue';
 export interface Player {
 	status: ShoukakuStatus | 'NULL';
 	channelId: string;
-	queue: {
-		name: string;
-		author: string;
-		duration: number;
-		url: string;
-	}[];
+	queue: string[];
 	loop: Loop;
+	announceId: string;
 }
 
 export const PlayerSchema = new Schema({
@@ -35,14 +31,8 @@ export const PlayerSchema = new Schema({
 		enum: ['CONNECTED', 'CONNECTING', 'DISCONNECTED', 'DISCONNECTING', 'NULL'], // ShoukakuStatus
 	},
 	channelId: String,
-	queue: [
-		{
-			name: String,
-			author: String,
-			duration: Number,
-			url: String,
-		},
-	],
+	queue: [String],
 	loop: Number,
 	_id: String,
+	announceId: String,
 });

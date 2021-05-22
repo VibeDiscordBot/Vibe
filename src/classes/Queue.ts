@@ -104,4 +104,11 @@ export default class Queue {
 	public setLoop(loop: Loop) {
 		this.loop = loop;
 	}
+
+	public async findFromHash(hash: string): Promise<ShoukakuTrack> {
+		const decoded: any = await this.player.node.rest.decode(hash);
+		return await (
+			await this.player.node.rest.resolve(decoded.identifier)
+		).tracks[0];
+	}
 }

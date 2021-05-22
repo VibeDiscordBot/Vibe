@@ -21,6 +21,9 @@ import GuildManager from './managers/GuildManager';
 import Logger from './Logger';
 import ShoukakuManager from './managers/ShoukakuManager';
 import MongoDB from './wrappers/MongoDB';
+import { Player, PlayerSchema } from '../schemas/player';
+import PlayerClass from './Player';
+import Queue from './Queue';
 
 export default class Client extends djs.Client {
 	public cfg: {
@@ -107,5 +110,36 @@ export default class Client extends djs.Client {
 	public async reload() {
 		await this.unload();
 		await this.build();
+	}
+
+	public async reconnectAll() {
+		const collection = this.db.getCollection('Player', PlayerSchema);
+		const players = await this.db.getAll<Player>(collection);
+
+		players
+			.filter(
+				(player) =>
+					player.status === 'CONNECTED' || player.status === 'CONNECTING'
+			)
+			.forEach(async (player) => {
+				const q = new Queue();
+				const p = new PlayerClass(this, await this.guilds.forge(player._id), q);
+				if (player.announceId)
+					p.setAnnounce(await this.channels.forge(player.announceId, 'text'));
+				q.setPlayer(p);
+
+				for (let i = 0; i < player.queue.length; i++) {
+					const track = player.queue[i];
+
+					q.add(await q.findFromHash(track));
+				}
+				Logger.debug(
+					`Restored ${player.queue.length} tracks from ${player._id}`
+				);
+
+				await p.connect(this.channels.forge(player.channelId, 'voice'));
+				p.play();
+				Logger.debug(`Restored ${player._id} and started playing`);
+			});
 	}
 }
