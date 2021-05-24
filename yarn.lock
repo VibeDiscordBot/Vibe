@@ -108,6 +108,11 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.7.tgz#98a993516c859eb0d5c4c8f098317a9ea68db9ad"
   integrity sha512-cxWFQVseBm6O9Gbw1IWb8r6OS4OhSt3hPZLkFApLjM8TEXROBuQGLAH2i2gZpcXdLBIrpXuTDhH7Vbm1iXmNGA==
 
+"@types/lodash@^4.14.170":
+  version "4.14.170"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.170.tgz#0d67711d4bf7f4ca5147e9091b847479b87925d6"
+  integrity sha512-bpcvu/MKHHeYX+qeEN8GE7DIravODWdACVA1ctevD8CN24RhPZIKMn9ntfAsrvLfSX3cR5RrBKAbYm9bGs0A+Q==
+
 "@types/mongodb@^3.5.27":
   version "3.6.12"
   resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.6.12.tgz#727960d34f35054d2f2ce68909e16094f742d935"
@@ -1448,15 +1453,6 @@ shebang-regex@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
-
-shoukaku@^1.6.4:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/shoukaku/-/shoukaku-1.6.4.tgz#23710b221239505aaa2d9bc3c20c2ad26b52bb91"
-  integrity sha512-qDtaqJ4zLQKOb2/Z+4NBAna9g70ZAX1JbRSlmAnZXI2Ayh+d+6pCNIUg0MWWGP6zBWJgLf+dzzfSdRIUFtDRzw==
-  dependencies:
-    abort-controller "^3.0.0"
-    node-fetch "^2.6.1"
-    ws "^7.4.4"
 
 "shoukaku@https://github.com/112batman/Vibe-Shoukaku":
   version "1.6.4"

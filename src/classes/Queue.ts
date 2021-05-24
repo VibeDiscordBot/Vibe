@@ -15,6 +15,7 @@
 
 import { ShoukakuTrack } from 'shoukaku';
 import Player from './Player';
+import _ from 'lodash';
 
 export enum Loop {
 	LoopTrack,
@@ -110,5 +111,11 @@ export default class Queue {
 		return await (
 			await this.player.node.rest.resolve(decoded.identifier)
 		).tracks[0];
+	}
+
+	public shuffle() {
+		this.queue = _.shuffle(this.queue);
+
+		this.player?.requestSync();
 	}
 }
