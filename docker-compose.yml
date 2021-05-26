@@ -11,3 +11,5 @@ services:
     environment: 
       - WAIT_HOSTS=lavalink:2333
     command: sh -c "/wait && yarn start"
+    ports: 
+        - 80:80

@@ -29,6 +29,12 @@ LAVALINK_HOST=The IP of your Lavalink server, when running using docker-compose 
 LAVALINK_PORT=The port of your Lavalink server, when running using docker-compose 2333 (default) is fine
 
 LAVALINK_AUTH=The password to authenticate with to your Lavalink server, this can be anything you come up with. Make sure to write this down as we need it later
+
+SPOTIFY_CLIENT_ID=The client ID of your Spotify developer application, you can obtain this by creating a application at spotify and copying it from your applications dashboard
+
+SPOTIFY_CLIENT_SECRET=The client secret of your Spotify developer application, you can obtain this by creating a application at spotify and copying it from your applications dashboard
+
+WEBSERVER_PORT=The port for the webserver to run on, when running using docker-compose 80 (default) is fine
 ```
 
 3. Now rename the `application.yml.example` file in the root of the project to `application.yml`
