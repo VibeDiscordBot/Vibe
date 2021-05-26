@@ -29,24 +29,49 @@ export default class extends Command {
 
 		if (player.connected) {
 			const query = args.join(' ');
-			const msg = await message.channel.send(
-				getNotification(`Searching for ${query}`, message.author)
-			);
-			const song = await player.queue.find(query);
+			const fromUrl = this.bot.musicSearch.parseUrl(query);
+			let msg: Message = null;
 
-			if (!song)
-				return message.channel.send(
+			if (fromUrl) {
+				msg = await message.channel.send(
+					getNotification(`Loading ${query}...`, message.author)
+				);
+			} else {
+				msg = await message.channel.send(
+					getNotification(`Searching for ${query}...`, message.author)
+				);
+			}
+
+			const songs = fromUrl
+				? await this.bot.musicSearch.getTrack(player, fromUrl)
+				: [
+						(await this.bot.musicSearch.findTracks(player, query)[0]) || null,
+				  ].filter((s) => s !== null);
+
+			if (songs.length < 1)
+				return msg.edit(
 					getNotification("Your query didn't return anything", message.author)
 				);
 
-			player.queue.add(song);
+			player.queue.addTracks(songs);
 
-			msg.edit(
-				getNotification(
-					`Added [${song.info.title}](${song.info.uri}) to the queue`,
-					message.author
-				)
-			);
+			if (songs.length === 1) {
+				msg.edit(
+					getNotification(
+						`Added [${songs[0].info.title}](${songs[0].info.uri}) to the queue`,
+						message.author
+					)
+				);
+			} else {
+				msg.edit(
+					getNotification(
+						'Added the following songs to the queue',
+						message.author
+					).setDescription(
+						songs.map((s) => (s = <any>`\n- [${s.info.title}](${s.info.uri})`))
+					)
+				);
+			}
 
 			player.play();
 		} else {

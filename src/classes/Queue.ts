@@ -81,16 +81,10 @@ export default class Queue {
 		this.player?.requestSync();
 	}
 
-	public async find(query: string): Promise<ShoukakuTrack | null> {
-		const result = await this.player.node.rest.resolve(query, 'youtube');
-		if (!result) return null;
-		result.tracks.map(
-			(track) => (track.info.length = Math.round(track.info.length / 1000))
-		);
-		const eligable = result.tracks.filter(
-			(track) => track.info.length < 10 * 60
-		);
-		return eligable.length > 0 ? eligable[0] : null;
+	public addTracks(tracks: ShoukakuTrack[]) {
+		this.queue.push(...tracks);
+
+		this.player?.requestSync();
 	}
 
 	public clear() {

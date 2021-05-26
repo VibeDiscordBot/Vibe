@@ -24,6 +24,8 @@ import MongoDB from './wrappers/MongoDB';
 import { Player, PlayerSchema } from '../schemas/player';
 import PlayerClass from './Player';
 import Queue from './Queue';
+import MusicSearch from './MusicSearch';
+import SpotifyWebApi from 'spotify-web-api-node';
 
 export default class Client extends djs.Client {
 	public cfg: {
@@ -41,6 +43,8 @@ export default class Client extends djs.Client {
 	public guildManager: GuildManager;
 	public db: MongoDB;
 	public shoukaku: ShoukakuManager;
+	public musicSearch: MusicSearch;
+	public spotifyApi: SpotifyWebApi;
 
 	constructor() {
 		super();
@@ -57,6 +61,12 @@ export default class Client extends djs.Client {
 		};
 	}
 
+	private async updateSpotify() {
+		const token = await this.spotifyApi.clientCredentialsGrant();
+		this.spotifyApi.setAccessToken(token.body.access_token);
+		this.setTimeout(this.updateSpotify, (token.body.expires_in - 10) * 1000);
+	}
+
 	public build(): Promise<void> {
 		return new Promise(async (res) => {
 			const eventHandler = new EventHandler(this);
@@ -67,6 +77,13 @@ export default class Client extends djs.Client {
 			this.commandHandler = commandHandler;
 			this.guildManager = new GuildManager(this);
 			this.shoukaku = new ShoukakuManager(this);
+			this.spotifyApi = new SpotifyWebApi({
+				clientId: process.env.SPOTIFY_CLIENT_ID,
+				clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+			});
+			await this.updateSpotify();
+
+			this.musicSearch = new MusicSearch(this.spotifyApi);
 
 			const username =
 				process.env.MONGODB_USERNAME && process.env.MONGODB_USERNAME !== ''
