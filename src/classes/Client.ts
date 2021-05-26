@@ -64,7 +64,9 @@ export default class Client extends djs.Client {
 	private async updateSpotify() {
 		const token = await this.spotifyApi.clientCredentialsGrant();
 		this.spotifyApi.setAccessToken(token.body.access_token);
-		this.setTimeout(this.updateSpotify, (token.body.expires_in - 10) * 1000);
+		this.setTimeout(() => {
+			this.updateSpotify();
+		}, (token.body.expires_in - 10) * 1000);
 	}
 
 	public build(): Promise<void> {
