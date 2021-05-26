@@ -63,13 +63,17 @@ export default class extends Command {
 					)
 				);
 			} else {
-				msg.edit(
+				/*msg.edit(
 					getNotification(
 						'Added the following songs to the queue',
 						message.author
 					).setDescription(
 						songs.map((s) => (s = <any>`\n- [${s.info.title}](${s.info.uri})`))
 					)
+				);*/
+				//TODO Create multiple page embed
+				msg.edit(
+					getNotification('Loaded the playlist to the queue', message.author)
 				);
 			}
 

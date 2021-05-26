@@ -51,6 +51,13 @@ export default class extends Command {
 				}) [${secondsToTimestamp(track.info.length)}]`;
 			}
 
+			// TODO Allow embed to be multiple pages to bypass this limit
+			if (text.length > 1000) {
+				return message.channel.send(
+					getNotification('Queue is too long to be displayed', message.author)
+				);
+			}
+
 			embed.setDescription(text);
 
 			message.channel.send(embed);
