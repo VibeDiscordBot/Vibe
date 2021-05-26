@@ -13,30 +13,26 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Event from '../classes/Event';
-import Logger from '../classes/Logger';
-import WebServer from '../classes/WebServer';
-import wait from '../helpers/wait';
+import Client from './Client';
+import express from 'express';
+import http from 'http';
+import path from 'path';
 
-export default class extends Event {
-	public name = 'Ready (client)';
-	public type = 'ready';
-	public once = true;
+export default class WebServer {
+	private app = express();
+	private api = express.Router();
+	private server = http.createServer(this.app);
 
-	public async run() {
-		Logger.info(
-			`${
-				this.bot.shard ? `[shard ${this.bot.shard.ids[0]}]` : '[client]'
-			} Is ready`
-		);
+	constructor(private client: Client) {
+		this.app.use(express.static(path.join(__dirname, '..', 'website')));
+		this.app.use('/api', this.api);
+	}
 
-		new WebServer(this.bot)
-			.listen(<number>(<any>process.env.WEBSERVER_PORT))
-			.then((port) => {
-				Logger.info(`Webserver online on port ${port}`);
+	public listen(port: number): Promise<number> {
+		return new Promise((res) => {
+			this.server.listen(port, () => {
+				res(port);
 			});
-
-		await wait(5000);
-		this.bot.reconnectAll();
+		});
 	}
 }

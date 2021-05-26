@@ -1,0 +1,42 @@
+body {
+	background-color: rgb(44, 43, 43);
+
+	width: 100vw;
+	height: 100vh;
+}
+
+.sidebar {
+	background-color: rgb(27, 27, 27);
+}
+
+.fillY {
+	height: 100%;
+}
+
+.sidebarTitleText {
+	color: white;
+}
+
+.sidebarSubText {
+	color: white;
+}
+
+.promotionTitleText {
+	color: white;
+	text-align: center;
+}
+
+.cardText {
+	text-align: center;
+	color: white;
+}
+
+.card {
+	background-color: black;
+	margin-bottom: 25px;
+}
+
+.titleTextWhy {
+	text-align: center;
+	color: white;
+}
