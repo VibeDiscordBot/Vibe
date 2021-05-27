@@ -34,6 +34,7 @@ export default class PagedEmbed {
 	private originalFooter: {
 		[index: number]: string;
 	} = {};
+	private pageFooter: boolean;
 
 	private get currentPage() {
 		return this.pages[this.page];
@@ -48,19 +49,22 @@ export default class PagedEmbed {
 		this.channel = channel;
 		this.owner = owner;
 		this.pages = pages;
+		this.pageFooter = pageFooter;
 	}
 
 	private constructPage() {
-		if (!this.originalFooter[this.page]) {
-			this.originalFooter[this.page] = this.currentPage.footer.text || '';
-		}
+		if (this.pageFooter) {
+			if (!this.originalFooter[this.page]) {
+				this.originalFooter[this.page] = this.currentPage.footer.text || '';
+			}
 
-		return this.currentPage.setFooter(
-			(this.originalFooter[this.page] && this.originalFooter[this.page] !== ''
-				? `${this.originalFooter[this.page]} | `
-				: '') + `Page ${this.page + 1} of ${this.pages.length}`,
-			this.currentPage.footer.iconURL
-		);
+			return this.currentPage.setFooter(
+				(this.originalFooter[this.page] && this.originalFooter[this.page] !== ''
+					? `${this.originalFooter[this.page]} | `
+					: '') + `Page ${this.page + 1} of ${this.pages.length}`,
+				this.currentPage.footer.iconURL
+			);
+		} else return this.currentPage;
 	}
 
 	private async send() {
