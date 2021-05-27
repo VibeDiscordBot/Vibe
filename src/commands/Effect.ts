@@ -85,7 +85,10 @@ export default class extends Command {
 			);
 		} else {
 			message.channel.send(
-				getNotification('Something went wrong, nothing changed', message.author)
+				getNotification(
+					'Something went wrong, nothing changed (audio effects are currently disabled)',
+					message.author
+				)
 			);
 		}
 	}
