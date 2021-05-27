@@ -26,6 +26,9 @@ export default class extends Command {
 	public permissions: PermissionType[] = [DJPermission.any];
 
 	public async exec(message: Message, args: string[], label: string) {
+		if (!args[0])
+			return message.channel.send('Please specify a song url or search query');
+
 		const player = await this.bot.guildManager.getPlayer(message.guild);
 
 		if (player.connected) {
