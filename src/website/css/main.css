@@ -40,3 +40,66 @@ body {
 	text-align: center;
 	color: white;
 }
+
+.sidebarIconWrapper {
+	position: relative;
+	z-index: 1;
+	width: 100%;
+}
+
+.sidebarIcon {
+	position: absolute;
+	z-index: 2;
+
+	width: 50px;
+	height: 50px;
+	top: 15px;
+	right: 15px;
+}
+
+.sidebarIconImg {
+	cursor: pointer;
+}
+
+.mobileSidebar {
+	z-index: 3;
+}
+
+.cardExpandIconWrapper {
+	position: relative;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+}
+
+.cardExpandIcon {
+	position: absolute;
+	z-index: 2;
+
+	width: 50px;
+	height: 50px;
+	top: 5px;
+	right: 5px;
+}
+
+.commandsHeaderTitleText {
+	color: white;
+	text-align: center;
+}
+
+.marginBottom-0 {
+	margin-bottom: 0px;
+}
+
+.commandCardExpandText {
+	color: white;
+	text-align: center;
+}
+
+body {
+	overflow: hidden;
+}
+
+#content {
+	overflow-y: auto;
+}

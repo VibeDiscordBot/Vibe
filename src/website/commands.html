@@ -1,12 +1,580 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<!-- HTML5 meta -->
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Vibe | Commands overview</title>
+
+		<!-- Favicons -->
+		<link
+			rel="apple-touch-icon"
+			sizes="57x57"
+			href="img/favicon/apple-icon-57x57.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="60x60"
+			href="img/favicon/apple-icon-60x60.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="72x72"
+			href="img/favicon/apple-icon-72x72.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="76x76"
+			href="img/favicon/apple-icon-76x76.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="114x114"
+			href="img/favicon/apple-icon-114x114.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="120x120"
+			href="img/favicon/apple-icon-120x120.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="144x144"
+			href="img/favicon/apple-icon-144x144.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="152x152"
+			href="img/favicon/apple-icon-152x152.png"
+		/>
+		<link
+			rel="apple-touch-icon"
+			sizes="180x180"
+			href="img/favicon/apple-icon-180x180.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="192x192"
+			href="img/favicon/android-icon-192x192.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="img/favicon/favicon-32x32.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="96x96"
+			href="img/favicon/favicon-96x96.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="16x16"
+			href="img/favicon/favicon-16x16.png"
+		/>
+
+		<!-- Bootstrap -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+			crossorigin="anonymous"
+		/>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+			crossorigin="anonymous"
+		></script>
+
+		<title>Vibe | Command overview</title>
+
+		<link rel="stylesheet" href="css/main.css" />
 	</head>
 	<body>
-		<!-- Needs to be made -->
+		<div class="container-fluid fillY">
+			<div class="d-md-none sidebarIconWrapper">
+				<div class="sidebarIcon">
+					<img
+						width="100%"
+						height="100%"
+						src="img/menu.png"
+						class="sidebarIconImg"
+						id="toggleMobileSidebar"
+					/>
+				</div>
+			</div>
+			<div class="d-none mobileSidebar row fillY" id="mobileSidebar">
+				<div class="col-12 sidebar">
+					<br />
+					<div class="d-flex justify-content-center">
+						<div class="d-flex">
+							<img src="img/logo.png" width="64px" height="64px" />
+							<pre></pre>
+							<h1 class="sidebarTitleText">Vibe</h1>
+						</div>
+					</div>
+					<div class="d-flex justify-content-center">
+						<i class="sidebarSubText">The ultimate Discord music bot</i>
+					</div>
+					<br />
+					<br />
+					<div class="d-flex justify-content-center flex-column">
+						<a class="btn btn-dark border border-dark border-2" href="/"
+							>Home</a
+						>
+						<pre></pre>
+						<a
+							class="btn btn-dark border border-dark border-2"
+							href="/commands.html"
+							>Commands</a
+						>
+						<pre></pre>
+						<a
+							class="btn btn-dark border border-dark border-2"
+							href="https://github.com/VibeDiscordBot"
+							target="_blank"
+							>Github</a
+						>
+					</div>
+				</div>
+			</div>
+			<div class="row fillY" id="content">
+				<div class="d-none d-md-block col-md-3 col-lg-2 sidebar">
+					<br />
+					<div class="d-flex justify-content-center">
+						<div class="d-flex">
+							<img src="img/logo.png" width="64px" height="64px" />
+							<pre></pre>
+							<h1 class="sidebarTitleText">Vibe</h1>
+						</div>
+					</div>
+					<div class="d-flex justify-content-center">
+						<i class="sidebarSubText">The ultimate Discord music bot</i>
+					</div>
+					<br />
+					<br />
+					<div class="d-flex justify-content-center flex-column">
+						<a class="btn btn-dark border border-dark border-2" href="/"
+							>Home</a
+						>
+						<pre></pre>
+						<a
+							class="btn btn-dark border border-dark border-2"
+							href="/commands.html"
+							>Commands</a
+						>
+						<pre></pre>
+						<a
+							class="btn btn-dark border border-dark border-2"
+							href="https://github.com/VibeDiscordBot"
+							target="_blank"
+							>Github</a
+						>
+					</div>
+				</div>
+				<div class="col">
+					<div class="d-flex align-items-center fillY">
+						<div class="row d-flex justify-content-center w-100">
+							<h1 class="commandsHeaderTitleText">Commands</h1>
+							<pre></pre>
+							<pre></pre>
+
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">!clear</h4>
+										<p class="card-text cardText marginBottom-0">
+											Clears the queue
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">Alias: c</p>
+												<p class="commandCardExpandText">
+													Permissions: DJ, Alone or Vote
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">!disconnect</h4>
+										<p class="card-text cardText marginBottom-0">
+											Disconnects the bot from the voice channel
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">
+													Alias: leave, l, d, fuckoff
+												</p>
+												<p class="commandCardExpandText">Permissions: DJ</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">
+											!effect (curentally disabled)
+										</h4>
+										<p class="card-text cardText marginBottom-0">
+											Apply a voice effect
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">Alias: ef</p>
+												<p class="commandCardExpandText">Permissions: DJ</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">!help</h4>
+										<p class="card-text cardText marginBottom-0">
+											View a list of available commands
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">Alias: ?</p>
+												<p class="commandCardExpandText">Permissions: Anyone</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">
+											!inspect {position in queue : number}
+										</h4>
+										<p class="card-text cardText marginBottom-0">
+											View a song at given queue position
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">Alias: i</p>
+												<p class="commandCardExpandText">Permissions: Anyone</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">!invite</h4>
+										<p class="card-text cardText marginBottom-0">
+											Get an invite link for Vibe
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">Alias: add</p>
+												<p class="commandCardExpandText">Permissions: Anyone</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">!join</h4>
+										<p class="card-text cardText marginBottom-0">
+											Connect Vibe to your voice channel
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">Alias: j</p>
+												<p class="commandCardExpandText">Permissions: Anyone</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">
+											!loop {mode : off, queue or track}
+										</h4>
+										<p class="card-text cardText marginBottom-0">
+											Change loop mode or turn of looping
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">
+													Mode aliases: <br />
+													off, none, false = do not loop <br />
+													queue, all = loop queue <br />
+													track, song = loop current track
+												</p>
+												<p class="commandCardExpandText">Permissions: DJ</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">!nowplaying</h4>
+										<p class="card-text cardText marginBottom-0">
+											See what song is curentally playing
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">Alias: np</p>
+												<p class="commandCardExpandText">Permissions: Anyone</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">!ping</h4>
+										<p class="card-text cardText marginBottom-0">
+											Check bot ping
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">Alias: pong</p>
+												<p class="commandCardExpandText">Permissions: Anyone</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">
+											!play {song : search query, youtube link, youtube playlist
+											link, spotify link or spotify playlist link}
+										</h4>
+										<p class="card-text cardText marginBottom-0">
+											Add your given song(s) to the queue
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">Alias: p</p>
+												<p class="commandCardExpandText">
+													Permissions: You must be connected to voice channel
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">!queue</h4>
+										<p class="card-text cardText marginBottom-0">
+											View the songs curentally in the queue
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">Alias: q</p>
+												<p class="commandCardExpandText">Permissions: Anyone</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">!shuffle</h4>
+										<p class="card-text cardText marginBottom-0">
+											Shuffle all songs in the queue
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">Permissions: DJ</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6">
+								<div class="card">
+									<div class="cardExpandIconWrapper">
+										<div class="cardExpandIcon">
+											<img
+												width="100%"
+												height="100%"
+												src="img/expandArrow.png"
+												class="sidebarIconImg expandCard"
+											/>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title cardText">!skip</h4>
+										<p class="card-text cardText marginBottom-0">
+											Skip the current song
+										</p>
+										<div class="d-none row expandArea">
+											<div class="col">
+												<p class="commandCardExpandText">Alias: s</p>
+												<p class="commandCardExpandText">
+													Permissions: DJ, Alone or Vote
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="js/mobileSideBar.js"></script>
+		<script src="js/expandCards.js"></script>
 	</body>
 </html>
