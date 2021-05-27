@@ -18,6 +18,7 @@ import { Message } from 'discord.js-light';
 import { getBaseEmbed, getNotification } from '../helpers/embed';
 import { secondsToTimestamp } from '../helpers/timestamp';
 import PermissionType from '../ts/PermissionType';
+import PagedEmbed from '../classes/PagedEmbed';
 
 export default class extends Command {
 	public name = 'queue';
@@ -51,16 +52,13 @@ export default class extends Command {
 				}) [${secondsToTimestamp(track.info.length)}]`;
 			}
 
-			// TODO Allow embed to be multiple pages to bypass this limit
-			if (text.length > 1000) {
-				return message.channel.send(
-					getNotification('Queue is too long to be displayed', message.author)
-				);
-			}
-
-			embed.setDescription(text);
-
-			message.channel.send(embed);
+			PagedEmbed.createFromDescription(
+				message.channel,
+				message.author,
+				true,
+				text,
+				embed
+			);
 		}
 	}
 }

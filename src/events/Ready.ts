@@ -16,7 +16,7 @@
 import Event from '../classes/Event';
 import Logger from '../classes/Logger';
 import WebServer from '../classes/WebServer';
-import wait from '../helpers/wait';
+//import wait from '../helpers/wait';
 
 export default class extends Event {
 	public name = 'Ready (client)';
@@ -36,7 +36,8 @@ export default class extends Event {
 				Logger.info(`Webserver online on port ${port}`);
 			});
 
-		await wait(5000);
-		this.bot.reconnectAll();
+		// TODO Re-enable once reconnecting is less broken
+		//await wait(5000);
+		//this.bot.reconnectAll();
 	}
 }

@@ -18,6 +18,7 @@ import { Message } from 'discord.js-light';
 import { getNotification } from '../helpers/embed';
 import PermissionType from '../ts/PermissionType';
 import { DJPermission } from '../helpers/requestPermission';
+import PagedEmbed from '../classes/PagedEmbed';
 
 export default class extends Command {
 	public name = 'play';
@@ -63,17 +64,17 @@ export default class extends Command {
 					)
 				);
 			} else {
-				/*msg.edit(
+				PagedEmbed.createAsEditFromDescription(
+					msg,
+					message.author,
+					true,
+					songs
+						.map((s) => (s = <any>`\n- [${s.info.title}](${s.info.uri})`))
+						.join(''),
 					getNotification(
 						'Added the following songs to the queue',
 						message.author
-					).setDescription(
-						songs.map((s) => (s = <any>`\n- [${s.info.title}](${s.info.uri})`))
 					)
-				);*/
-				//TODO Create multiple page embed
-				msg.edit(
-					getNotification('Loaded the playlist to the queue', message.author)
 				);
 			}
 
