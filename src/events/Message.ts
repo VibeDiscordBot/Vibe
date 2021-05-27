@@ -23,6 +23,8 @@ export default class extends Event {
 	public once = false;
 
 	public async run(message: djs.Message) {
+		if (message.author.bot) return;
+
 		await this.bot.guildManager.register(message.guild);
 
 		if (message.content.startsWith(this.bot.cfg.prefix)) {
