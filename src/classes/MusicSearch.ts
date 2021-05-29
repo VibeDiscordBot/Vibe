@@ -149,10 +149,22 @@ export default class MusicSearch {
 		} else return [];
 	}
 
-	public async findTracks(
+	public async findTrack(
 		player: Player,
 		query: string
-	): Promise<ShoukakuTrack[]> {
-		return (await player.node.rest.resolve(query, 'youtube')).tracks;
+	): Promise<ShoukakuTrack> {
+		const track =
+			(await this.spotifyApi.search(query, ['track'])).body.tracks.items[0] ||
+			null;
+		if (!track) return null;
+
+		const youTubeQuery = `${track.name} by ${track.artists
+			.map((a) => (a = <any>a.name))
+			.join(' and ')}`;
+
+		return (
+			(await player.node.rest.resolve(youTubeQuery, 'youtube')).tracks[0] ||
+			null
+		);
 	}
 }

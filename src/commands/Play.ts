@@ -57,9 +57,9 @@ export default class extends Command {
 
 			const songs = fromUrl
 				? await this.bot.musicSearch.getTrack(player, fromUrl)
-				: [
-						(await this.bot.musicSearch.findTracks(player, query)[0]) || null,
-				  ].filter((s) => s !== null);
+				: [await this.bot.musicSearch.findTrack(player, query)].filter(
+						(s) => s !== null
+				  );
 
 			if (songs.length < 1)
 				return msg.edit(
