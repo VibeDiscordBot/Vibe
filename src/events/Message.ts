@@ -16,6 +16,7 @@
 import Event from '../classes/Event';
 import * as djs from 'discord.js-light';
 import { CommandResponse } from '../handlers/CommandHandler';
+import { TextChannel } from 'discord.js-light';
 
 export default class extends Event {
 	public name = 'Message (command)';
@@ -32,7 +33,18 @@ export default class extends Event {
 			const args = content.split(' ');
 			const label = args.shift();
 
-			switch (await this.bot.commandHandler.run(message, args, label)) {
+			switch (
+				await this.bot.commandHandler.run(
+					{
+						author: message.author,
+						channel: <TextChannel>message.channel,
+						guild: message.guild,
+						member: message.member,
+					},
+					args,
+					label
+				)
+			) {
 				case CommandResponse.Unknown:
 					if (this.bot.cfg.unknowCommandMessages)
 						message.channel.send(`Unknown command "${label}"`);

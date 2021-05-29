@@ -13,16 +13,29 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Message } from 'discord.js';
+import { Guild, GuildMember, TextChannel, User } from 'discord.js';
 import PermissionType from '../ts/PermissionType';
 import Client from './Client';
+import { Option } from './Interactions';
+
+export type CommandContext = {
+	author: User;
+	member: GuildMember;
+	guild: Guild;
+	channel: TextChannel;
+};
 
 export default abstract class Command {
 	abstract name: string;
 	abstract alias: string[] = [];
 	abstract permissions: PermissionType[] = [];
+	abstract options: Option[] = [];
 
 	constructor(protected bot: Client) {}
 
-	abstract exec(message: Message, args: string[], label: string): Promise<any>;
+	abstract exec(
+		context: CommandContext,
+		args: string[],
+		label: string
+	): Promise<any>;
 }

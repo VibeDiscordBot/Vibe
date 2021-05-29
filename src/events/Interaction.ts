@@ -13,26 +13,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Client from './Client';
-import express from 'express';
-import http from 'http';
-import path from 'path';
+import { CommandInteraction, Interaction } from 'discord.js-light';
+import Event from '../classes/Event';
 
-export default class WebServer {
-	private app = express();
-	private api = express.Router();
-	private server = http.createServer(this.app);
+export default class extends Event {
+	public name = 'Interaction (client)';
+	public type = 'interaction';
+	public once = false;
 
-	constructor(private client: Client) {
-		this.app.use(express.static(path.join(__dirname, '..', 'website')));
-		this.app.use('/api', this.api);
-	}
+	public async run(interaction: Interaction) {
+		await this.bot.guildManager.register(interaction.guild);
 
-	public listen(port: number): Promise<number> {
-		return new Promise((res) => {
-			this.server.listen(port, () => {
-				res(port);
-			});
-		});
+		if (interaction.isCommand()) {
+			interaction.defer();
+
+			this.bot.commandHandler.runInteraction(<CommandInteraction>interaction);
+		}
 	}
 }

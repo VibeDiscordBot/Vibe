@@ -13,12 +13,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
 import PermissionType from '../ts/PermissionType';
 import { DJPermission } from '../helpers/requestPermission';
 import { AudioEffect } from '../classes/Player';
 import { getNotification } from '../helpers/embed';
+import { Option, OptionType } from '../classes/Interactions';
 
 function parseEffect(text: string): AudioEffect | null {
 	switch (text.toString()) {
@@ -57,37 +57,89 @@ export default class extends Command {
 	public name = 'effect';
 	public alias = ['ef'];
 	public permissions: PermissionType[] = [DJPermission.dj];
+	public options: Option[] = [
+		{
+			name: 'effect',
+			description: 'The effect to change',
+			required: true,
+			type: OptionType.String,
+			choices: [
+				{
+					name: 'Distortion',
+					value: 'distortion',
+				},
+				{
+					name: 'Volume',
+					value: 'volume',
+				},
+				{
+					name: 'Karaoke',
+					value: 'karaoke',
+				},
+				{
+					name: 'Rotation',
+					value: 'rotation',
+				},
+				{
+					name: 'Speed',
+					value: 'timescale',
+				},
+				{
+					name: 'Tremolo',
+					value: 'tremolo',
+				},
+				{
+					name: 'Vibrato',
+					value: 'vibrato',
+				},
+				{
+					name: 'Nightcore',
+					value: 'nightcore',
+				},
+				{
+					name: 'Bass',
+					value: 'bass',
+				},
+			],
+		},
+		{
+			name: 'value',
+			description: 'The value for the effect, below 0 means off',
+			type: OptionType.Integer,
+			required: true,
+		},
+	];
 
-	public async exec(message: Message, args: string[], label: string) {
-		const player = await this.bot.guildManager.getPlayer(message.guild);
+	public async exec(context: CommandContext, args: string[], label: string) {
+		const player = await this.bot.guildManager.getPlayer(context.guild);
 
 		const effect = parseEffect(args[0] || '');
 		if (!effect)
-			return message.channel.send(
-				getNotification('Please specify a valid audio effect', message.author)
+			return context.channel.send(
+				getNotification('Please specify a valid audio effect', context.author)
 			);
 
 		const value = Number(args[1] || '!');
 		if (isNaN(value))
-			return message.channel.send(
+			return context.channel.send(
 				getNotification(
 					'Please specify a value for the effect (number)',
-					message.author
+					context.author
 				)
 			);
 
 		if (await player.setEffect(effect, value)) {
-			message.channel.send(
+			context.channel.send(
 				getNotification(
 					`Set ${AudioEffect[effect]} to ${value.toString()}`,
-					message.author
+					context.author
 				)
 			);
 		} else {
-			message.channel.send(
+			context.channel.send(
 				getNotification(
 					'Something went wrong, nothing changed (audio effects are currently disabled)',
-					message.author
+					context.author
 				)
 			);
 		}

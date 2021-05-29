@@ -13,11 +13,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
 import { getNotification } from '../helpers/embed';
 import PermissionType from '../ts/PermissionType';
 import { DJPermission } from '../helpers/requestPermission';
+import { Option } from '../classes/Interactions';
 
 export default class extends Command {
 	public name = 'clear';
@@ -27,17 +27,18 @@ export default class extends Command {
 		DJPermission.alone,
 		DJPermission.vote,
 	];
+	public options: Option[] = [];
 
-	public async exec(message: Message, args: string[], label: string) {
-		const player = await this.bot.guildManager.getPlayer(message.guild);
+	public async exec(context: CommandContext, args: string[], label: string) {
+		const player = await this.bot.guildManager.getPlayer(context.guild);
 		if (player.connected) {
-			message.channel.send(
-				getNotification('Please disconnect me first', message.author)
+			context.channel.send(
+				getNotification('Please disconnect me first', context.author)
 			);
 		} else {
 			player.queue.clear();
-			message.channel.send(
-				getNotification('Cleared the queue', message.author)
+			context.channel.send(
+				getNotification('Cleared the queue', context.author)
 			);
 		}
 	}

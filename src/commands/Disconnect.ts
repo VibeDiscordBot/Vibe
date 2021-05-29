@@ -13,24 +13,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
 import { getNotification } from '../helpers/embed';
 import PermissionType from '../ts/PermissionType';
 import { DJPermission } from '../helpers/requestPermission';
+import { Option } from '../classes/Interactions';
 
 export default class extends Command {
 	public name = 'disconnect';
 	public alias = ['leave', 'l', 'd', 'fuckoff'];
 	public permissions: PermissionType[] = [DJPermission.dj];
+	public options: Option[] = [];
 
-	public async exec(message: Message, args: string[], label: string) {
-		const player = await this.bot.guildManager.getPlayer(message.guild);
+	public async exec(context: CommandContext, args: string[], label: string) {
+		const player = await this.bot.guildManager.getPlayer(context.guild);
 		if (player.connected) {
 			player.disconnect();
 		} else {
-			message.channel.send(
-				getNotification("I'm not connected", message.author)
+			context.channel.send(
+				getNotification("I'm not connected", context.author)
 			);
 		}
 	}

@@ -103,7 +103,7 @@ export function requestPermission(
 			await msg.react('❌');
 
 			const collector = msg.createReactionCollector(
-				(reaction: MessageReaction, user: GuildMember) => {
+				(reaction: MessageReaction, user: User) => {
 					return (
 						user.id !== bot.user.id &&
 						(reaction.emoji.name === '✅' || reaction.emoji.name === '❌') &&

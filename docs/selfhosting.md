@@ -35,6 +35,10 @@ SPOTIFY_CLIENT_ID=The client ID of your Spotify developer application, you can o
 SPOTIFY_CLIENT_SECRET=The client secret of your Spotify developer application, you can obtain this by creating a application at spotify and copying it from your applications dashboard
 
 WEBSERVER_PORT=The port for the webserver to run on, when running using docker-compose 80 (default) is fine
+
+DISCORD_APPLICATION_ID=The ID of your Discord\ application
+
+FAST_STARTUP=Whether or not the enable fast-startup, when enabled slash commands wont be registered. Only change this if you know what you're doing, else just leave it to false
 ```
 
 3. Now rename the `application.yml.example` file in the root of the project to `application.yml`

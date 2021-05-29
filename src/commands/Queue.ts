@@ -13,29 +13,30 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
 import { getBaseEmbed, getNotification } from '../helpers/embed';
 import { secondsToTimestamp } from '../helpers/timestamp';
 import PermissionType from '../ts/PermissionType';
 import PagedEmbed from '../classes/PagedEmbed';
+import { Option } from '../classes/Interactions';
 
 export default class extends Command {
 	public name = 'queue';
 	public alias = ['q'];
 	public permissions: PermissionType[] = [];
+	public options: Option[] = [];
 
-	public async exec(message: Message, args: string[], label: string) {
-		const player = await this.bot.guildManager.getPlayer(message.guild);
+	public async exec(context: CommandContext, args: string[], label: string) {
+		const player = await this.bot.guildManager.getPlayer(context.guild);
 		const queue = player.queue.getQueue();
 
 		if (!player.queue.current && queue.length < 1) {
-			message.channel.send(
-				getNotification('The queue is empty', message.author)
+			context.channel.send(
+				getNotification('The queue is empty', context.author)
 			);
 		} else {
-			const embed = getBaseEmbed(message.author).setTitle(
-				`Queue for ${message.guild.name}`
+			const embed = getBaseEmbed(context.author).setTitle(
+				`Queue for ${context.guild.name}`
 			);
 
 			let text = '';
@@ -53,8 +54,8 @@ export default class extends Command {
 			}
 
 			PagedEmbed.createFromDescription(
-				message.channel,
-				message.author,
+				context.channel,
+				context.author,
 				true,
 				text,
 				embed

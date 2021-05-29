@@ -13,23 +13,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command, { CommandContext } from '../classes/Command';
-import PermissionType from '../ts/PermissionType';
-import { getNotification } from '../helpers/embed';
-import { Option } from '../classes/Interactions';
+import { Client } from 'discord.js-light';
+import { Router } from 'express';
 
-export default class extends Command {
-	public name = 'reload';
-	public alias = [];
-	public permissions: PermissionType[] = [];
-	public options: Option[] = [];
+export default class ApiRouter {
+	public router = Router();
 
-	public async exec(context: CommandContext, args: string[], label: string) {
-		if (context.author.id === this.bot.cfg.ownerId) {
-			await this.bot.reload();
-			context.channel.send(
-				getNotification('Reload successfull', context.author)
-			);
-		}
-	}
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
+	constructor(client: Client) {}
 }

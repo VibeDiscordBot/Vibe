@@ -26,6 +26,7 @@ import PlayerClass from './Player';
 import Queue from './Queue';
 import MusicSearch from './MusicSearch';
 import SpotifyWebApi from 'spotify-web-api-node';
+import Interactions from './Interactions';
 
 export default class Client extends djs.Client {
 	public cfg: {
@@ -37,6 +38,7 @@ export default class Client extends djs.Client {
 		prefix: string;
 		ownerId: string;
 		unknowCommandMessages: boolean;
+		fastStartup: boolean; // When enabled won't register any slash commands
 	};
 
 	public commandHandler: CommandHandler;
@@ -45,9 +47,16 @@ export default class Client extends djs.Client {
 	public shoukaku: ShoukakuManager;
 	public musicSearch: MusicSearch;
 	public spotifyApi: SpotifyWebApi;
+	public interactions: Interactions;
 
 	constructor() {
-		super();
+		super({
+			intents: [
+				'GUILD_MESSAGE_REACTIONS',
+				'GUILD_VOICE_STATES',
+				'GUILD_MESSAGES',
+			],
+		});
 
 		this.cfg = {
 			path: {
@@ -58,6 +67,7 @@ export default class Client extends djs.Client {
 			prefix: process.env.BOT_PREFIX,
 			ownerId: '464287642356285442',
 			unknowCommandMessages: false,
+			fastStartup: <boolean>(<any>process.env.FAST_STARTUP) || false,
 		};
 	}
 
@@ -72,6 +82,10 @@ export default class Client extends djs.Client {
 	public build(): Promise<void> {
 		return new Promise(async (res) => {
 			const eventHandler = new EventHandler(this);
+			this.interactions = new Interactions(
+				process.env.DISCORD_TOKEN,
+				process.env.DISCORD_APPLICATION_ID
+			);
 			const commandHandler = new CommandHandler(this);
 
 			await commandHandler.build();
@@ -79,6 +93,7 @@ export default class Client extends djs.Client {
 			this.commandHandler = commandHandler;
 			this.guildManager = new GuildManager(this);
 			this.shoukaku = new ShoukakuManager(this);
+
 			this.spotifyApi = new SpotifyWebApi({
 				clientId: process.env.SPOTIFY_CLIENT_ID,
 				clientSecret: process.env.SPOTIFY_CLIENT_SECRET,

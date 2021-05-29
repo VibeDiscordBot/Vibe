@@ -15,8 +15,11 @@
 
 import Client from './classes/Client';
 import * as dotenv from 'dotenv';
+import Logger from './classes/Logger';
 
 dotenv.config();
+
+Logger.logDebug = false;
 
 const bot = new Client();
 bot.build().then(async () => {

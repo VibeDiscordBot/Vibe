@@ -13,12 +13,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
 import PermissionType from '../ts/PermissionType';
 import { Loop } from '../classes/Queue';
 import { getNotification } from '../helpers/embed';
 import { DJPermission } from '../helpers/requestPermission';
+import { Option, OptionType } from '../classes/Interactions';
 
 function toString(loop: Loop) {
 	switch (loop) {
@@ -52,29 +52,51 @@ export default class extends Command {
 	public name = 'loop';
 	public alias = [];
 	public permissions: PermissionType[] = [DJPermission.dj];
+	public options: Option[] = [
+		{
+			name: 'mode',
+			description: 'The looping mode',
+			type: OptionType.String,
+			required: true,
+			choices: [
+				{
+					name: 'Off',
+					value: 'off',
+				},
+				{
+					name: 'Queue',
+					value: 'queue',
+				},
+				{
+					name: 'Song',
+					value: 'track',
+				},
+			],
+		},
+	];
 
-	public async exec(message: Message, args: string[], label: string) {
-		const player = await this.bot.guildManager.getPlayer(message.guild);
+	public async exec(context: CommandContext, args: string[], label: string) {
+		const player = await this.bot.guildManager.getPlayer(context.guild);
 
 		if (!args[0]) {
-			message.channel.send(
+			context.channel.send(
 				getNotification(
 					`Currently ${toString(player.queue.getLoop())}`,
-					message.author
+					context.author
 				)
 			);
 		} else {
 			const mode = parse(args[0]);
 			if (mode !== null) {
 				player.queue.setLoop(mode);
-				message.channel.send(
-					getNotification(`Now ${toString(mode)}`, message.author)
+				context.channel.send(
+					getNotification(`Now ${toString(mode)}`, context.author)
 				);
 			} else {
-				message.channel.send(
+				context.channel.send(
 					getNotification(
 						`I couldn't parse "${args[0]}" as a loop mode`,
-						message.author
+						context.author
 					)
 				);
 			}

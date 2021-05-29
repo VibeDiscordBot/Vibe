@@ -13,32 +13,40 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
 import PermissionType from '../ts/PermissionType';
 import { getNotification, getSongEmbed } from '../helpers/embed';
+import { Option, OptionType } from '../classes/Interactions';
 
 export default class extends Command {
 	public name = 'inspect';
 	public alias = ['i'];
 	public permissions: PermissionType[] = [];
+	public options: Option[] = [
+		{
+			name: 'position',
+			description: 'The position in queue of the song to inspect',
+			type: OptionType.Integer,
+			required: true,
+		},
+	];
 
-	public async exec(message: Message, args: string[], label: string) {
+	public async exec(context: CommandContext, args: string[], label: string) {
 		const index = args[0] ? Number(args[0]) - 1 : NaN;
 		if (isNaN(index)) {
-			return message.channel.send(
-				getNotification('Please specify the song index', message.author)
+			return context.channel.send(
+				getNotification('Please specify the song index', context.author)
 			);
 		}
 
-		const player = await this.bot.guildManager.getPlayer(message.guild);
+		const player = await this.bot.guildManager.getPlayer(context.guild);
 		if (player.queue.getQueue()[index]) {
-			message.channel.send(
-				getSongEmbed(player.queue.getQueue()[index], message.author)
+			context.channel.send(
+				getSongEmbed(player.queue.getQueue()[index], context.author)
 			);
 		} else {
-			message.channel.send(
-				getNotification("There's no song at that index", message.author)
+			context.channel.send(
+				getNotification("There's no song at that index", context.author)
 			);
 		}
 	}

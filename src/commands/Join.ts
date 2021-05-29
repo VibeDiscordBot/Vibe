@@ -13,37 +13,42 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message, TextChannel, VoiceChannel } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
+import { TextChannel, VoiceChannel } from 'discord.js-light';
 import { getNotification } from '../helpers/embed';
 import PermissionType from '../ts/PermissionType';
+import { Option } from '../classes/Interactions';
 
 export default class extends Command {
 	public name = 'join';
 	public alias = ['j'];
 	public permissions: PermissionType[] = ['CONNECT', 'SPEAK'];
+	public options: Option[] = [];
 
-	public async exec(message: Message, args: string[], label: string) {
-		if (message.member.voice?.channel) {
-			const player = await this.bot.guildManager.getPlayer(message.guild);
+	public async exec(context: CommandContext, args: string[], label: string) {
+		if (
+			context.member.voice?.channel &&
+			(context.member.voice.channel as VoiceChannel)
+		) {
+			const player = await this.bot.guildManager.getPlayer(context.guild);
 
-			await player.connect(message.member.voice.channel);
-			player.setAnnounce(<TextChannel>message.channel);
-			message.channel.send(
+			await player.connect(<VoiceChannel>context.member.voice.channel);
+			player.setAnnounce(<TextChannel>context.channel);
+			context.channel.send(
 				getNotification(
 					`Joined ${
 						(<VoiceChannel>(
-							await this.bot.channels.fetch(message.member.voice.channel.id)
+							await this.bot.channels.fetch(context.member.voice.channel.id)
 						)).name
 					}`,
-					message.author
+					context.author
 				)
 			);
 		} else {
-			message.channel.send(
+			context.channel.send(
 				getNotification(
 					'You need to be in a voice channel to do that',
-					message.author
+					context.author
 				)
 			);
 		}

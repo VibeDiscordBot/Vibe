@@ -13,15 +13,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
 import PermissionType from '../ts/PermissionType';
+import { Option } from '../classes/Interactions';
 
 export default class extends Command {
 	public name = 'example';
 	public alias = [];
 	public permissions: PermissionType[] = [];
+	public options: Option[] = [];
 
 	/* eslint-disable */
-	public async exec(message: Message, args: string[], label: string) {}
+	public async exec(context: CommandContext, args: string[], label: string) {}
 }

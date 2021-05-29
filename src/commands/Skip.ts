@@ -13,11 +13,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
 import PermissionType from '../ts/PermissionType';
 import { DJPermission } from '../helpers/requestPermission';
 import { getNotification } from '../helpers/embed';
+import { Option, OptionType } from '../classes/Interactions';
 
 export default class extends Command {
 	public name = 'skip';
@@ -27,18 +27,26 @@ export default class extends Command {
 		DJPermission.dj,
 		DJPermission.vote,
 	];
+	public options: Option[] = [
+		{
+			name: 'amount',
+			description: 'The amount of songs to skip',
+			type: OptionType.Integer,
+			required: false,
+		},
+	];
 
-	public async exec(message: Message, args: string[], label: string) {
-		const player = await this.bot.guildManager.getPlayer(message.guild);
+	public async exec(context: CommandContext, args: string[], label: string) {
+		const player = await this.bot.guildManager.getPlayer(context.guild);
 		const amount = Number(args[0]);
 		if (!isNaN(amount)) {
 			player.skip(amount);
-			message.channel.send(
-				getNotification(`Skipped ${amount} songs`, message.author)
+			context.channel.send(
+				getNotification(`Skipped ${amount} songs`, context.author)
 			);
 		} else {
 			player.skip(1);
-			message.channel.send(getNotification('Skipped 1 song', message.author));
+			context.channel.send(getNotification('Skipped 1 song', context.author));
 		}
 	}
 }

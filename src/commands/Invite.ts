@@ -13,22 +13,23 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
 import PermissionType from '../ts/PermissionType';
 import { getBaseEmbed } from '../helpers/embed';
 import generateInviteLink from '../helpers/generateInviteLink';
+import { Option } from '../classes/Interactions';
 
 export default class extends Command {
 	public name = 'invite';
 	public alias = ['add'];
 	public permissions: PermissionType[] = [];
+	public options: Option[] = [];
 
 	private inviteLink = generateInviteLink();
 
-	public async exec(message: Message, args: string[], label: string) {
-		message.channel.send(
-			getBaseEmbed(message.author)
+	public async exec(context: CommandContext, args: string[], label: string) {
+		context.channel.send(
+			getBaseEmbed(context.author)
 				.setTitle('Add me to your server')
 				.setDescription(
 					`You can invite me using [this](${this.inviteLink}) link`

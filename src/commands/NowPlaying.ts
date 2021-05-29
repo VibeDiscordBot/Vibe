@@ -13,25 +13,26 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
 import PermissionType from '../ts/PermissionType';
 import { getNotification, getSongEmbed } from '../helpers/embed';
+import { Option } from '../classes/Interactions';
 
 export default class extends Command {
 	public name = 'nowplaying';
 	public alias = ['np'];
 	public permissions: PermissionType[] = [];
+	public options: Option[] = [];
 
-	public async exec(message: Message, args: string[], label: string) {
-		const player = await this.bot.guildManager.getPlayer(message.guild);
+	public async exec(context: CommandContext, args: string[], label: string) {
+		const player = await this.bot.guildManager.getPlayer(context.guild);
 		if (player.queue.current) {
-			message.channel.send(
-				getSongEmbed(player.queue.current, message.author, 'Now playing')
+			context.channel.send(
+				getSongEmbed(player.queue.current, context.author, 'Now playing')
 			);
 		} else {
-			message.channel.send(
-				getNotification('Not currently playing anything', message.author)
+			context.channel.send(
+				getNotification('Not currently playing anything', context.author)
 			);
 		}
 	}

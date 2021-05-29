@@ -13,23 +13,32 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
 import { getNotification } from '../helpers/embed';
 import PermissionType from '../ts/PermissionType';
 import { DJPermission } from '../helpers/requestPermission';
 import PagedEmbed from '../classes/PagedEmbed';
+import { Option, OptionType } from '../classes/Interactions';
+import { Message } from 'discord.js';
 
 export default class extends Command {
 	public name = 'play';
 	public alias = ['p'];
 	public permissions: PermissionType[] = [DJPermission.any];
+	public options: Option[] = [
+		{
+			name: 'source',
+			description: 'The source/query of the song to play/add to queue',
+			type: OptionType.String,
+			required: true,
+		},
+	];
 
-	public async exec(message: Message, args: string[], label: string) {
+	public async exec(context: CommandContext, args: string[], label: string) {
 		if (!args[0])
-			return message.channel.send('Please specify a song url or search query');
+			return context.channel.send('Please specify a song url or search query');
 
-		const player = await this.bot.guildManager.getPlayer(message.guild);
+		const player = await this.bot.guildManager.getPlayer(context.guild);
 
 		if (player.connected) {
 			const query = args.join(' ');
@@ -37,12 +46,12 @@ export default class extends Command {
 			let msg: Message = null;
 
 			if (fromUrl) {
-				msg = await message.channel.send(
-					getNotification(`Loading ${query}...`, message.author)
+				msg = await context.channel.send(
+					getNotification(`Loading ${query}...`, context.author)
 				);
 			} else {
-				msg = await message.channel.send(
-					getNotification(`Searching for ${query}...`, message.author)
+				msg = await context.channel.send(
+					getNotification(`Searching for ${query}...`, context.author)
 				);
 			}
 
@@ -54,7 +63,7 @@ export default class extends Command {
 
 			if (songs.length < 1)
 				return msg.edit(
-					getNotification("Your query didn't return anything", message.author)
+					getNotification("Your query didn't return anything", context.author)
 				);
 
 			player.queue.addTracks(songs);
@@ -63,28 +72,28 @@ export default class extends Command {
 				msg.edit(
 					getNotification(
 						`Added [${songs[0].info.title}](${songs[0].info.uri}) to the queue`,
-						message.author
+						context.author
 					)
 				);
 			} else {
 				PagedEmbed.createAsEditFromDescription(
 					msg,
-					message.author,
+					context.author,
 					true,
 					songs
 						.map((s) => (s = <any>`\n- [${s.info.title}](${s.info.uri})`))
 						.join(''),
 					getNotification(
 						'Added the following songs to the queue',
-						message.author
+						context.author
 					)
 				);
 			}
 
 			player.play();
 		} else {
-			message.channel.send(
-				getNotification("I'm not connected to a voice channel", message.author)
+			context.channel.send(
+				getNotification("I'm not connected to a voice channel", context.author)
 			);
 		}
 	}

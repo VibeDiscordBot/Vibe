@@ -18,20 +18,24 @@ import 'colors';
 export default class Logger {
 	public static logDebug = false;
 
-	private static log(key: string, text: string) {
-		console.log('['.bold + key + ']'.bold + ' ' + text);
+	private static log(key: string, text: string, prefix: boolean) {
+		if (prefix) {
+			console.log('['.bold + key + ']'.bold + ' ' + text);
+		} else {
+			console.log(text);
+		}
 	}
 
-	public static info(text: string) {
-		this.log('Info'.blue, text);
+	public static info(text: string, prefix = true) {
+		this.log('Info'.blue, text, prefix);
 	}
 
-	public static error(text: string) {
-		this.log('Error'.red, text);
+	public static error(text: string, prefix = true) {
+		this.log('Error'.red, text, prefix);
 	}
 
-	public static debug(text: string) {
+	public static debug(text: string, prefix = true) {
 		if (!this.logDebug) return;
-		this.log('Debug'.grey, text);
+		this.log('Debug'.grey, text, prefix);
 	}
 }

@@ -13,18 +13,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
 import { getBaseEmbed } from '../helpers/embed';
 import PermissionType from '../ts/PermissionType';
+import { Option } from '../classes/Interactions';
 
 export default class extends Command {
 	public name = 'help';
 	public alias = ['?'];
 	public permissions: PermissionType[] = [];
+	public options: Option[] = [];
 
-	public async exec(message: Message, args: string[], label: string) {
-		const embed = getBaseEmbed(message.author).setTitle('Commands');
+	public async exec(context: CommandContext, args: string[], label: string) {
+		const embed = getBaseEmbed(context.author).setTitle('Commands');
 
 		const cmds = this.bot.commandHandler.commands;
 		const names = [];
@@ -46,6 +47,6 @@ export default class extends Command {
 		});
 		embed.setDescription(text);
 
-		message.channel.send(embed);
+		context.channel.send(embed);
 	}
 }

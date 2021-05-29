@@ -16,10 +16,11 @@
 import Handler from '../classes/Handler';
 import * as path from 'path';
 import * as fs from 'fs';
-import Command from '../classes/Command';
-import { Message, PermissionString, TextChannel } from 'discord.js';
+import Command, { CommandContext } from '../classes/Command';
+import { CommandInteraction, PermissionString, TextChannel } from 'discord.js';
 import Logger from '../classes/Logger';
 import { DJPermission, requestPermission } from '../helpers/requestPermission';
+import wait from '../helpers/wait';
 
 export enum CommandResponse {
 	Unknown,
@@ -37,12 +38,41 @@ export default class CommandHandler extends Handler {
 		path: string;
 	}[] = [];
 
+	private async registerCommandAsSlashCommand(command: Command) {
+		if (this.bot.cfg.fastStartup) {
+			Logger.debug(
+				`Skipped trying to register slash command ${command.name} because fastStartup is enabled`
+			);
+			return;
+		}
+
+		Logger.debug(`Trying to register slash command ${command.name}`);
+
+		try {
+			await this.bot.interactions.createCommand({
+				name: command.name,
+				description: command.name,
+				options: command.options,
+			});
+		} catch (err) {
+			const time = err.response.data['retry_after'] * 1000;
+			Logger.debug(`Got error`);
+			Logger.debug(err, false);
+			Logger.debug(`Retrying after ${time}ms`);
+			await wait(time);
+			await this.registerCommandAsSlashCommand(command);
+		}
+	}
+
 	public async init() {
 		const commandsPath = this.bot.cfg.path.commands;
-
-		fs.readdirSync(commandsPath, {
+		const commands = fs.readdirSync(commandsPath, {
 			withFileTypes: true,
-		}).forEach(async (command) => {
+		});
+
+		for (let i = 0; i < commands.length; i++) {
+			const command = commands[i];
+
 			if (command.isFile() && command.name.endsWith('.ts')) {
 				const p = path.join(commandsPath, command.name);
 				const C = (await import(p)).default;
@@ -52,12 +82,14 @@ export default class CommandHandler extends Handler {
 					cmd: instance,
 					path: path.resolve(p),
 				});
+
+				await this.registerCommandAsSlashCommand(instance);
 			}
-		});
+		}
 	}
 
 	public async run(
-		message: Message,
+		context: CommandContext,
 		args: string[],
 		label: string
 	): Promise<CommandResponse> {
@@ -84,15 +116,30 @@ export default class CommandHandler extends Handler {
 			!(
 				await requestPermission(
 					this.bot,
-					<TextChannel>message.channel,
-					message.member,
+					context.channel,
+					context.member,
 					costumPerms
 				)
 			).perm
 		)
 			return CommandResponse.UserInsufficientPermissions;
 
-		cmd[0].cmd.exec(message, args, label);
+		cmd[0].cmd.exec(context, args, label);
 		return CommandResponse.Success;
+	}
+
+	public async runInteraction(interaction: CommandInteraction) {
+		const label = interaction.commandName;
+
+		this.run(
+			{
+				author: interaction.member.user,
+				member: interaction.member,
+				channel: <TextChannel>interaction.channel,
+				guild: interaction.guild,
+			},
+			interaction.options.map((o) => (o = <any>o.value.toString())),
+			label
+		);
 	}
 }

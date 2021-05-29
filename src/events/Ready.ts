@@ -15,7 +15,7 @@
 
 import Event from '../classes/Event';
 import Logger from '../classes/Logger';
-import WebServer from '../classes/WebServer';
+import WebServer from '../classes/website/WebServer';
 //import wait from '../helpers/wait';
 
 export default class extends Event {

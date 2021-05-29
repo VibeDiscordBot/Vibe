@@ -13,17 +13,18 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Command from '../classes/Command';
-import { Message } from 'discord.js-light';
+import Command, { CommandContext } from '../classes/Command';
 import { getNotification } from '../helpers/embed';
 import PermissionType from '../ts/PermissionType';
+import { Option } from '../classes/Interactions';
 
 export default class extends Command {
 	public name = 'ping';
 	public alias = ['pong'];
 	public permissions: PermissionType[] = [];
+	public options: Option[] = [];
 
-	public async exec(message: Message, args: string[], label: string) {
-		message.channel.send(getNotification('Pong', message.author));
+	public async exec(context: CommandContext, args: string[], label: string) {
+		context.channel.send(getNotification('Pong', context.author));
 	}
 }
