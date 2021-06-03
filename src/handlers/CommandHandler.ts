@@ -39,7 +39,7 @@ export default class CommandHandler extends Handler {
 	}[] = [];
 
 	private async registerCommandAsSlashCommand(command: Command) {
-		if (this.bot.cfg.fastStartup) {
+		if (this.bot.cfg.fastStartup === false) {
 			Logger.debug(
 				`Skipped trying to register slash command ${command.name} because fastStartup is enabled`
 			);
