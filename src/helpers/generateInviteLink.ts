@@ -29,5 +29,5 @@ export default function generateInviteLink() {
 
 	return `https://discord.com/api/oauth2/authorize?client_id=${clientId}&permissions=${
 		new Permissions(permissions).bitfield
-	}&scope=bot`;
+	}&scope=${encodeURIComponent(['bot', 'applications.commands'].join(' '))}`;
 }

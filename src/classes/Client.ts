@@ -27,6 +27,7 @@ import Queue from './Queue';
 import MusicSearch from './MusicSearch';
 import SpotifyWebApi from 'spotify-web-api-node';
 import Interactions from './Interactions';
+import generateInviteLink from '../helpers/generateInviteLink';
 
 export default class Client extends djs.Client {
 	public cfg: {
@@ -80,6 +81,8 @@ export default class Client extends djs.Client {
 	}
 
 	public build(): Promise<void> {
+		Logger.info(`Generated invite link ${generateInviteLink()}`);
+
 		return new Promise(async (res) => {
 			const eventHandler = new EventHandler(this);
 			this.interactions = new Interactions(
