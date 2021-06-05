@@ -23,6 +23,7 @@ export default class extends Command {
 	public alias = [];
 	public permissions: PermissionType[] = [];
 	public options: Option[] = [];
+	public exclude = true;
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		if (context.author.id === this.bot.cfg.ownerId) {

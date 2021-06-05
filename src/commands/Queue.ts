@@ -25,6 +25,7 @@ export default class extends Command {
 	public alias = ['q'];
 	public permissions: PermissionType[] = [];
 	public options: Option[] = [];
+	public exclude = false;
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(context.guild);

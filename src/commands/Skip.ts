@@ -35,6 +35,7 @@ export default class extends Command {
 			required: false,
 		},
 	];
+	public exclude = false;
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(context.guild);

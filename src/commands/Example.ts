@@ -22,6 +22,7 @@ export default class extends Command {
 	public alias = [];
 	public permissions: PermissionType[] = [];
 	public options: Option[] = [];
+	public exclude = true;
 
 	/* eslint-disable */
 	public async exec(context: CommandContext, args: string[], label: string) {}

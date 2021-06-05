@@ -30,6 +30,7 @@ export default class extends Command {
 			required: true,
 		},
 	];
+	public exclude = false;
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const index = args[0] ? Number(args[0]) - 1 : NaN;

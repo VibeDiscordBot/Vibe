@@ -32,6 +32,7 @@ export default class extends Command {
 			required: true,
 		},
 	];
+	public exclude = false;
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		if (!args[0])

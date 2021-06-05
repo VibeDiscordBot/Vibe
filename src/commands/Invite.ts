@@ -24,6 +24,7 @@ export default class extends Command {
 	public alias = ['add'];
 	public permissions: PermissionType[] = [];
 	public options: Option[] = [];
+	public exclude = false;
 
 	private inviteLink = generateInviteLink();
 

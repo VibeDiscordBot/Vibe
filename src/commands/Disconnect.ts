@@ -24,6 +24,7 @@ export default class extends Command {
 	public alias = ['leave', 'l', 'd', 'fuckoff'];
 	public permissions: PermissionType[] = [DJPermission.dj];
 	public options: Option[] = [];
+	public exclude = false;
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(context.guild);

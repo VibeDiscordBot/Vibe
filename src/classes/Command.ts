@@ -47,6 +47,7 @@ export default abstract class Command {
 	abstract alias: string[] = [];
 	abstract permissions: PermissionType[] = [];
 	abstract options: Option[] = [];
+	abstract exclude: boolean = false;
 
 	constructor(protected bot: Client) {}
 

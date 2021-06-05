@@ -55,6 +55,13 @@ export default class CommandHandler extends Handler {
 			return;
 		}
 
+		if (command.exclude) {
+			Logger.debug(
+				`Skipped trying to register slash command ${command.name} because ${command.name}.exclude is true`
+			);
+			return;
+		}
+
 		Logger.debug(`Trying to register slash command ${command.name}`);
 
 		try {

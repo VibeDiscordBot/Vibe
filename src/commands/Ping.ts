@@ -23,6 +23,7 @@ export default class extends Command {
 	public alias = ['pong'];
 	public permissions: PermissionType[] = [];
 	public options: Option[] = [];
+	public exclude = false;
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		//context.channel.send(getNotification('Pong', context.author));

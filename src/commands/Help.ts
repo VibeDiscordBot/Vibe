@@ -23,6 +23,7 @@ export default class extends Command {
 	public alias = ['?'];
 	public permissions: PermissionType[] = [];
 	public options: Option[] = [];
+	public exclude = false;
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const embed = getBaseEmbed(context.author).setTitle('Commands');
@@ -30,7 +31,7 @@ export default class extends Command {
 		const cmds = this.bot.commandHandler.commands;
 		const names = [];
 		cmds.forEach((cmd) => {
-			if (cmd.cmd.name === 'example') return;
+			if (cmd.cmd.exclude) return;
 			names.push(cmd.cmd.name);
 		});
 		let text = '';

@@ -24,6 +24,7 @@ export default class extends Command {
 	public alias = ['j'];
 	public permissions: PermissionType[] = ['CONNECT', 'SPEAK'];
 	public options: Option[] = [];
+	public exclude = false;
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		if (
