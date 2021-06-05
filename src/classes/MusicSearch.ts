@@ -16,7 +16,7 @@
 import SpotifyWebApi from 'spotify-web-api-node';
 import qs from 'querystring';
 import Player from './Player';
-import { ShoukakuTrack } from 'shoukaku';
+import { ShoukakuTrack, ShoukakuTrackList } from 'shoukaku';
 
 enum MusicSource {
 	Spotify,
@@ -132,18 +132,20 @@ export default class MusicSearch {
 			} else if (url.type === MusicType.Playlist) {
 				const playlist = await this.spotifyApi.getPlaylist(url.id);
 
-				const tracks: ShoukakuTrack[] = [];
+				const promises: Promise<ShoukakuTrackList>[] = [];
 				for (let i = 0; i < playlist.body.tracks.items.length; i++) {
 					const track = playlist.body.tracks.items[i].track;
 
 					const query = `${track.name} by ${track.artists
 						.map((a) => (a = <any>a.name))
 						.join(' and ')}`;
-					tracks.push(
-						(await player.node.rest.resolve(query, 'youtube')).tracks[0]
-					);
+
+					promises.push(player.node.rest.resolve(query, 'youtube'));
 				}
 
+				const tracks = (await Promise.all(promises)).map(
+					(tracks) => (tracks = <any>tracks.tracks[0])
+				);
 				return tracks;
 			} else return [];
 		} else return [];
