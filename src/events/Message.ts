@@ -16,7 +16,18 @@
 import Event from '../classes/Event';
 import * as djs from 'discord.js-light';
 import { CommandResponse } from '../handlers/CommandHandler';
-import { TextChannel } from 'discord.js-light';
+import { Message, TextChannel } from 'discord.js-light';
+import { EditableMessage, MessageData } from '../classes/Command';
+
+class EditableMessage_ extends EditableMessage {
+	constructor(public message: Message) {
+		super();
+	}
+
+	public async edit(data: MessageData): Promise<EditableMessage> {
+		return new EditableMessage_(await this.message.edit(data));
+	}
+}
 
 export default class extends Event {
 	public name = 'Message (command)';
@@ -40,6 +51,11 @@ export default class extends Event {
 						channel: <TextChannel>message.channel,
 						guild: message.guild,
 						member: message.member,
+						send: async function (data: MessageData): Promise<EditableMessage> {
+							return new EditableMessage_(await this.channel.send(data));
+						}.bind({
+							channel: message.channel,
+						}),
 					},
 					args,
 					label

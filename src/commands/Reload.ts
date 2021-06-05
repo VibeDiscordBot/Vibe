@@ -27,9 +27,7 @@ export default class extends Command {
 	public async exec(context: CommandContext, args: string[], label: string) {
 		if (context.author.id === this.bot.cfg.ownerId) {
 			await this.bot.reload();
-			context.channel.send(
-				getNotification('Reload successfull', context.author)
-			);
+			context.send(getNotification('Reload successfull', context.author));
 		}
 	}
 }

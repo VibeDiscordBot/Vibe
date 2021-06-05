@@ -115,13 +115,13 @@ export default class extends Command {
 
 		const effect = parseEffect(args[0] || '');
 		if (!effect)
-			return context.channel.send(
+			return context.send(
 				getNotification('Please specify a valid audio effect', context.author)
 			);
 
 		const value = Number(args[1] || '!');
 		if (isNaN(value))
-			return context.channel.send(
+			return context.send(
 				getNotification(
 					'Please specify a value for the effect (number)',
 					context.author
@@ -129,14 +129,14 @@ export default class extends Command {
 			);
 
 		if (await player.setEffect(effect, value)) {
-			context.channel.send(
+			context.send(
 				getNotification(
 					`Set ${AudioEffect[effect]} to ${value.toString()}`,
 					context.author
 				)
 			);
 		} else {
-			context.channel.send(
+			context.send(
 				getNotification(
 					'Something went wrong, nothing changed (audio effects are currently disabled)',
 					context.author

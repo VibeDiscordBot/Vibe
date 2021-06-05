@@ -47,6 +47,6 @@ export default class extends Command {
 		});
 		embed.setDescription(text);
 
-		context.channel.send(embed);
+		context.send(embed);
 	}
 }

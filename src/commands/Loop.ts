@@ -79,7 +79,7 @@ export default class extends Command {
 		const player = await this.bot.guildManager.getPlayer(context.guild);
 
 		if (!args[0]) {
-			context.channel.send(
+			context.send(
 				getNotification(
 					`Currently ${toString(player.queue.getLoop())}`,
 					context.author
@@ -89,11 +89,9 @@ export default class extends Command {
 			const mode = parse(args[0]);
 			if (mode !== null) {
 				player.queue.setLoop(mode);
-				context.channel.send(
-					getNotification(`Now ${toString(mode)}`, context.author)
-				);
+				context.send(getNotification(`Now ${toString(mode)}`, context.author));
 			} else {
-				context.channel.send(
+				context.send(
 					getNotification(
 						`I couldn't parse "${args[0]}" as a loop mode`,
 						context.author

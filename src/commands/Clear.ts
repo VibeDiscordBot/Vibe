@@ -32,14 +32,12 @@ export default class extends Command {
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(context.guild);
 		if (player.connected) {
-			context.channel.send(
+			context.send(
 				getNotification('Please disconnect me first', context.author)
 			);
 		} else {
 			player.queue.clear();
-			context.channel.send(
-				getNotification('Cleared the queue', context.author)
-			);
+			context.send(getNotification('Cleared the queue', context.author));
 		}
 	}
 }

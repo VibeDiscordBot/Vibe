@@ -41,12 +41,10 @@ export default class extends Command {
 		const amount = Number(args[0]);
 		if (!isNaN(amount)) {
 			player.skip(amount);
-			context.channel.send(
-				getNotification(`Skipped ${amount} songs`, context.author)
-			);
+			context.send(getNotification(`Skipped ${amount} songs`, context.author));
 		} else {
 			player.skip(1);
-			context.channel.send(getNotification('Skipped 1 song', context.author));
+			context.send(getNotification('Skipped 1 song', context.author));
 		}
 	}
 }

@@ -25,6 +25,7 @@ export default class extends Command {
 	public options: Option[] = [];
 
 	public async exec(context: CommandContext, args: string[], label: string) {
-		context.channel.send(getNotification('Pong', context.author));
+		//context.channel.send(getNotification('Pong', context.author));
+		context.send(getNotification('Pong', context.author));
 	}
 }

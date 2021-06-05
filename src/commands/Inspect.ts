@@ -34,18 +34,18 @@ export default class extends Command {
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const index = args[0] ? Number(args[0]) - 1 : NaN;
 		if (isNaN(index)) {
-			return context.channel.send(
+			return context.send(
 				getNotification('Please specify the song index', context.author)
 			);
 		}
 
 		const player = await this.bot.guildManager.getPlayer(context.guild);
 		if (player.queue.getQueue()[index]) {
-			context.channel.send(
+			context.send(
 				getSongEmbed(player.queue.getQueue()[index], context.author)
 			);
 		} else {
-			context.channel.send(
+			context.send(
 				getNotification("There's no song at that index", context.author)
 			);
 		}

@@ -27,11 +27,11 @@ export default class extends Command {
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(context.guild);
 		if (player.queue.current) {
-			context.channel.send(
+			context.send(
 				getSongEmbed(player.queue.current, context.author, 'Now playing')
 			);
 		} else {
-			context.channel.send(
+			context.send(
 				getNotification('Not currently playing anything', context.author)
 			);
 		}

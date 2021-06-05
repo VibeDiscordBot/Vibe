@@ -28,7 +28,7 @@ export default class extends Command {
 	private inviteLink = generateInviteLink();
 
 	public async exec(context: CommandContext, args: string[], label: string) {
-		context.channel.send(
+		context.send(
 			getBaseEmbed(context.author)
 				.setTitle('Add me to your server')
 				.setDescription(

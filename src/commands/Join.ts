@@ -34,7 +34,7 @@ export default class extends Command {
 
 			await player.connect(<VoiceChannel>context.member.voice.channel);
 			player.setAnnounce(<TextChannel>context.channel);
-			context.channel.send(
+			context.send(
 				getNotification(
 					`Joined ${
 						(<VoiceChannel>(
@@ -45,7 +45,7 @@ export default class extends Command {
 				)
 			);
 		} else {
-			context.channel.send(
+			context.send(
 				getNotification(
 					'You need to be in a voice channel to do that',
 					context.author

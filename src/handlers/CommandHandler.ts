@@ -16,8 +16,17 @@
 import Handler from '../classes/Handler';
 import * as path from 'path';
 import * as fs from 'fs';
-import Command, { CommandContext } from '../classes/Command';
-import { CommandInteraction, PermissionString, TextChannel } from 'discord.js';
+import Command, {
+	CommandContext,
+	EditableMessage,
+	MessageData,
+} from '../classes/Command';
+import {
+	CommandInteraction,
+	Message,
+	PermissionString,
+	TextChannel,
+} from 'discord.js';
 import Logger from '../classes/Logger';
 import { DJPermission, requestPermission } from '../helpers/requestPermission';
 import wait from '../helpers/wait';
@@ -131,12 +140,47 @@ export default class CommandHandler extends Handler {
 	public async runInteraction(interaction: CommandInteraction) {
 		const label = interaction.commandName;
 
+		await interaction.defer();
+
+		const editFunction = async function (
+			data: MessageData
+		): Promise<EditableMessage> {
+			await this.interaction.editReply(data);
+			return new (class extends EditableMessage {
+				public message: Message = null;
+
+				constructor(
+					public edit: (data: MessageData) => Promise<EditableMessage>
+				) {
+					super();
+				}
+			})(editFunction.bind(this));
+		};
+
 		this.run(
 			{
 				author: interaction.member.user,
 				member: interaction.member,
 				channel: <TextChannel>interaction.channel,
 				guild: interaction.guild,
+				send: async function (data: MessageData): Promise<EditableMessage> {
+					await this.interaction.editReply(data);
+					return new (class extends EditableMessage {
+						public message: Message = null;
+
+						constructor(
+							public edit: (data: MessageData) => Promise<EditableMessage>
+						) {
+							super();
+						}
+					})(
+						editFunction.bind({
+							interaction: interaction,
+						})
+					);
+				}.bind({
+					interaction: interaction,
+				}),
 			},
 			interaction.options.map((o) => (o = <any>o.value.toString())),
 			label

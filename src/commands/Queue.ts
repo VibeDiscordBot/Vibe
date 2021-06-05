@@ -31,9 +31,7 @@ export default class extends Command {
 		const queue = player.queue.getQueue();
 
 		if (!player.queue.current && queue.length < 1) {
-			context.channel.send(
-				getNotification('The queue is empty', context.author)
-			);
+			context.send(getNotification('The queue is empty', context.author));
 		} else {
 			const embed = getBaseEmbed(context.author).setTitle(
 				`Queue for ${context.guild.name}`

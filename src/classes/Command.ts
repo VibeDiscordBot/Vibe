@@ -13,16 +13,33 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Guild, GuildMember, TextChannel, User } from 'discord.js';
+import {
+	APIMessage,
+	Guild,
+	GuildMember,
+	Message,
+	MessageEmbed,
+	TextChannel,
+	User,
+} from 'discord.js';
 import PermissionType from '../ts/PermissionType';
 import Client from './Client';
 import { Option } from './Interactions';
+
+export type MessageData = string | APIMessage | MessageEmbed;
+
+export abstract class EditableMessage {
+	abstract message?: Message;
+
+	abstract edit(data: MessageData): Promise<EditableMessage>;
+}
 
 export type CommandContext = {
 	author: User;
 	member: GuildMember;
 	guild: Guild;
 	channel: TextChannel;
+	send: (data: MessageData) => Promise<EditableMessage>;
 };
 
 export default abstract class Command {

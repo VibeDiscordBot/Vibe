@@ -25,8 +25,6 @@ export default class extends Event {
 		await this.bot.guildManager.register(interaction.guild);
 
 		if (interaction.isCommand()) {
-			interaction.defer();
-
 			this.bot.commandHandler.runInteraction(<CommandInteraction>interaction);
 		}
 	}

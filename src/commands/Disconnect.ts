@@ -30,9 +30,7 @@ export default class extends Command {
 		if (player.connected) {
 			player.disconnect();
 		} else {
-			context.channel.send(
-				getNotification("I'm not connected", context.author)
-			);
+			context.send(getNotification("I'm not connected", context.author));
 		}
 	}
 }

@@ -29,6 +29,6 @@ export default class extends Command {
 		const player = await this.bot.guildManager.getPlayer(context.guild);
 		player.queue.shuffle();
 
-		context.channel.send(getNotification('Shuffled the queue', context.author));
+		context.send(getNotification('Shuffled the queue', context.author));
 	}
 }
