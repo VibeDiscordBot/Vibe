@@ -31,6 +31,7 @@ export default class extends Command {
 		},
 	];
 	public exclude = false;
+	public description = 'View more details of a song in the queue';
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const index = args[0] ? Number(args[0]) - 1 : NaN;

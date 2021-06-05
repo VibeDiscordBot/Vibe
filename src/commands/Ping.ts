@@ -24,6 +24,7 @@ export default class extends Command {
 	public permissions: PermissionType[] = [];
 	public options: Option[] = [];
 	public exclude = false;
+	public description = 'Check if I am still able to respond to commands';
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		//context.channel.send(getNotification('Pong', context.author));

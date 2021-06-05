@@ -25,6 +25,8 @@ export default class extends Command {
 	public permissions: PermissionType[] = [];
 	public options: Option[] = [];
 	public exclude = false;
+	public description =
+		'Get an invite link so you can add me to your own server';
 
 	private inviteLink = generateInviteLink();
 

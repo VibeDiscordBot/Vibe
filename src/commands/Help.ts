@@ -24,6 +24,7 @@ export default class extends Command {
 	public permissions: PermissionType[] = [];
 	public options: Option[] = [];
 	public exclude = false;
+	public description = 'Display a list of available commands';
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const embed = getBaseEmbed(context.author).setTitle('Commands');

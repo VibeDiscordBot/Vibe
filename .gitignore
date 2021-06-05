@@ -5,3 +5,5 @@ application.yml
 *.log
 
 .idea/
+
+src/website/bin

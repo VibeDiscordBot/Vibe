@@ -24,6 +24,7 @@ export default class extends Command {
 	public permissions: PermissionType[] = [];
 	public options: Option[] = [];
 	public exclude = false;
+	public description = 'View the currently playing song';
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(context.guild);

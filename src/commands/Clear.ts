@@ -29,6 +29,7 @@ export default class extends Command {
 	];
 	public options: Option[] = [];
 	public exclude = false;
+	public description = 'Clear the queue';
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(context.guild);

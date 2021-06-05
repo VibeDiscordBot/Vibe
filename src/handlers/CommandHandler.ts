@@ -67,7 +67,7 @@ export default class CommandHandler extends Handler {
 		try {
 			await this.bot.interactions.createCommand({
 				name: command.name,
-				description: command.name,
+				description: command.description,
 				options: command.options,
 			});
 		} catch (err) {

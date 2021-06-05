@@ -41,7 +41,7 @@ export enum OptionType {
 	Mentionable = 9,
 }
 
-type Choice = {
+export type Choice = {
 	name: string;
 	value: string;
 };

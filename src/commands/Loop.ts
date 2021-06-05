@@ -75,6 +75,7 @@ export default class extends Command {
 		},
 	];
 	public exclude = false;
+	public description = 'Switch loop mode or turn looping off';
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(context.guild);

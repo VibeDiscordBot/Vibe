@@ -110,6 +110,7 @@ export default class extends Command {
 		},
 	];
 	public exclude = false;
+	public description = 'Change the value of an audio effect or disable it';
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		const player = await this.bot.guildManager.getPlayer(context.guild);

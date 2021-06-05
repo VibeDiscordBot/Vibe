@@ -25,6 +25,7 @@ export default class extends Command {
 	public permissions: PermissionType[] = ['CONNECT', 'SPEAK'];
 	public options: Option[] = [];
 	public exclude = false;
+	public description = 'Join me to the voice channel you are currently in';
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		if (

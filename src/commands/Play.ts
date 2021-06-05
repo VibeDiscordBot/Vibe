@@ -33,6 +33,7 @@ export default class extends Command {
 		},
 	];
 	public exclude = false;
+	public description = 'Add a song/playlist to the queue';
 
 	public async exec(context: CommandContext, args: string[], label: string) {
 		if (!args[0])
