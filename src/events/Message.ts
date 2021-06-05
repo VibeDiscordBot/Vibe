@@ -73,6 +73,9 @@ export default class extends Event {
 						'You have insufficient permissions (are you connected to a voice channel?)'
 					);
 					break;
+				case CommandResponse.Error:
+					message.channel.send('An error occured while running that command');
+					break;
 			}
 		}
 	}

@@ -140,8 +140,13 @@ export default class CommandHandler extends Handler {
 		)
 			return CommandResponse.UserInsufficientPermissions;
 
-		cmd[0].cmd.exec(context, args, label);
-		return CommandResponse.Success;
+		try {
+			await cmd[0].cmd.exec(context, args, label);
+			return CommandResponse.Success;
+		} catch (err) {
+			Logger.error(err, false);
+			return CommandResponse.Error;
+		}
 	}
 
 	public async runInteraction(interaction: CommandInteraction) {
@@ -164,33 +169,53 @@ export default class CommandHandler extends Handler {
 			})(editFunction.bind(this));
 		};
 
-		this.run(
-			{
-				author: interaction.member.user,
-				member: interaction.member,
-				channel: <TextChannel>interaction.channel,
-				guild: interaction.guild,
-				send: async function (data: MessageData): Promise<EditableMessage> {
-					await this.interaction.editReply(data);
-					return new (class extends EditableMessage {
-						public message: Message = null;
+		const context = {
+			author: interaction.member.user,
+			member: interaction.member,
+			channel: <TextChannel>interaction.channel,
+			guild: interaction.guild,
+			send: async function (data: MessageData): Promise<EditableMessage> {
+				await this.interaction.editReply(data);
+				return new (class extends EditableMessage {
+					public message: Message = null;
 
-						constructor(
-							public edit: (data: MessageData) => Promise<EditableMessage>
-						) {
-							super();
-						}
-					})(
-						editFunction.bind({
-							interaction: interaction,
-						})
-					);
-				}.bind({
-					interaction: interaction,
-				}),
-			},
-			interaction.options.map((o) => (o = <any>o.value.toString())),
-			label
-		);
+					constructor(
+						public edit: (data: MessageData) => Promise<EditableMessage>
+					) {
+						super();
+					}
+				})(
+					editFunction.bind({
+						interaction: interaction,
+					})
+				);
+			}.bind({
+				interaction: interaction,
+			}),
+		};
+
+		switch (
+			await this.run(
+				context,
+				interaction.options.map((o) => (o = <any>o.value.toString())),
+				label
+			)
+		) {
+			case CommandResponse.Unknown:
+				if (this.bot.cfg.unknowCommandMessages)
+					context.send(`Unknown command "${label}"`);
+				break;
+			case CommandResponse.InsufficientPermissions:
+				context.send('I have insufficient permissions');
+				break;
+			case CommandResponse.UserInsufficientPermissions:
+				context.send(
+					'You have insufficient permissions (are you connected to a voice channel?)'
+				);
+				break;
+			case CommandResponse.Error:
+				context.send('An error occured while running that command');
+				break;
+		}
 	}
 }
