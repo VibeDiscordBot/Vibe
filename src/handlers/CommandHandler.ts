@@ -23,9 +23,11 @@ import Command, {
 } from '../classes/Command';
 import {
 	CommandInteraction,
+	GuildMember,
 	Message,
 	PermissionString,
 	TextChannel,
+	User,
 } from 'discord.js';
 import Logger from '../classes/Logger';
 import { DJPermission, requestPermission } from '../helpers/requestPermission';
@@ -170,8 +172,8 @@ export default class CommandHandler extends Handler {
 		};
 
 		const context = {
-			author: interaction.member.user,
-			member: interaction.member,
+			author: <User>interaction.member.user,
+			member: <GuildMember>interaction.member,
 			channel: <TextChannel>interaction.channel,
 			guild: interaction.guild,
 			send: async function (data: MessageData): Promise<EditableMessage> {
