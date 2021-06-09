@@ -27,59 +27,52 @@ export default class Generator {
 
 	constructor(private bot: Client) {}
 
+	private getComponent(name: string): string {
+		return fs.readFileSync(
+			path.join(__dirname, '..', '..', 'website', 'components', name),
+			{
+				encoding: 'utf-8',
+			}
+		);
+	}
+
+	private getPage(name: string): string {
+		return fs.readFileSync(path.join(__dirname, '..', '..', 'website', name), {
+			encoding: 'utf-8',
+		});
+	}
+
 	private createCommandCard(command: Command) {
-		return `<div class="col-12 col-lg-6">
-    <div class="card">
-        <div class="cardExpandIconWrapper">
-            <div class="cardExpandIcon">
-                <img
-                    width="100%"
-                    height="100%"
-                    src="img/expandArrow.png"
-                    class="sidebarIconImg expandCard"
-                />
-            </div>
-        </div>
-        <div class="card-body">
-            <h4 class="card-title cardText">${this.prefix}${command.name}</h4>
-            <p class="card-text cardText marginBottom-0">
-                ${command.description}
-            </p>
-            <div class="d-none row expandArea">
-                <div class="col">
-                    ${
-											command.options.length > 0
-												? `<p class="commandCardExpandText">${command.options
-														.map((o) => (o = <any>this.optionToString(o)))
-														.join('<br /><br />')}</p>`
-												: ''
-										}
-                    ${
-											command.alias.length > 0
-												? `<p class="commandCardExpandText">Alias: ${command.alias.join(
-														', '
-												  )}</p>`
-												: ''
-										}
-                    <p class="commandCardExpandText">
-                        Permissions: ${
-													command.permissions.length > 0
-														? `${command.permissions
-																.map(
-																	(p) =>
-																		(p = <any>isNaN(Number(p.toString()))
-																			? p.toString()
-																			: DJPermission[p])
-																)
-																.join(', ')}`
-														: 'Anyone'
-												}
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>`;
+		return this.getComponent('commandCard.html')
+			.replace('{prefix}', this.prefix)
+			.replace('{name}', command.name)
+			.replace('{description}', command.description)
+			.replace(
+				'{options}',
+				command.options.length > 0
+					? command.options
+							.map((o) => (o = <any>this.optionToString(o)))
+							.join('<br /><br />')
+					: ''
+			)
+			.replace(
+				'{alias}',
+				command.alias.length > 0 ? 'Alias: ' + command.alias.join(', ') : ''
+			)
+			.replace(
+				'{permissions}',
+				command.permissions.length > 0
+					? 'Permissions: ' +
+							command.permissions
+								.map(
+									(p) =>
+										(p = <any>isNaN(Number(p.toString()))
+											? p.toString()
+											: DJPermission[p])
+								)
+								.join(', ')
+					: 'Permissions: Anyone'
+			);
 	}
 
 	private optionToString(option: Option) {
@@ -111,19 +104,27 @@ export default class Generator {
 		return data.join('\n');
 	}
 
+	private getTemplate(title: string) {
+		return this.getComponent('empty.html')
+			.replace('{head}', this.getComponent('head.html'))
+			.replace('{title}', title)
+			.replace(new RegExp('{sidebar}', 'g'), this.getComponent('sidebar.html'));
+	}
+
 	public generateCommandsPage() {
-		const template = fs.readFileSync(
-			path.join(__dirname, '..', '..', 'website', 'commands.html'),
-			{
-				encoding: 'utf-8',
-			}
+		return this.getTemplate('Vibe | Command overview').replace(
+			'{content}',
+			this.getPage('commands.html').replace(
+				'{commandsSection}',
+				this.generateCommandsSection()
+			)
 		);
+	}
 
-		const generated = template.replace(
-			'{commandsSection}',
-			this.generateCommandsSection()
+	public generateIndexPage() {
+		return this.getTemplate('Vibe | The ultimate Discord music bot!').replace(
+			'{content}',
+			this.getPage('index.html')
 		);
-
-		return generated;
 	}
 }

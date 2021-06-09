@@ -83,5 +83,9 @@ export default class WebServer {
 			path.join(__dirname, '..', '..', 'website', 'bin', 'commands.html'),
 			new Generator(this.client).generateCommandsPage()
 		);
+		fs.writeFileSync(
+			path.join(__dirname, '..', '..', 'website', 'bin', 'index.html'),
+			new Generator(this.client).generateIndexPage()
+		);
 	}
 }
